@@ -1,0 +1,14 @@
+#判断是否载入该yaml文件
+load_param_flag: 1
+#注意这里的信息要和launch中无人机的初始位置对应
+iris0_world_x: 0
+iris1_world_x: 0
+
+
+Pos_PID:
+  arm_joint1: {P: 4, I: 0.0, D: 0.003}
+  arm_joint2: {P: 4, I: 0.0, D: 0.003}
+  arm_joint3: {P: 4, I: 0.0, D: 0.003}
+  arm_joint4: {P: 4, I: 0.0, D: 0.003}
+  left_gripper_joint: {P: 1, I: 0.0, D: 0.001}
+
