@@ -10,10 +10,8 @@
                 "/opt/ros/noetic/include/**",
                 "/usr/include/eigen3/Eigen/**",
                 "/usr/include/**",
-                "/home/wjl/UAV_Project/UAV_ws/src/uav_arm/include/arm/**",
-                "/home/wjl/UAV_Project/UAV_ws/src/uav_arm/include/uav/**",
-                "/home/wjl/UAV_Project/UAV_ws/src/uav_arm/include/vision/**",
-                "${workspaceFolder}/devel/.private/uav_arm/include"
+                "/home/wjl/UAV_Project/UAV_ws/src/uav/include/uav/**",
+                "${workspaceFolder}/devel/.private/uav/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

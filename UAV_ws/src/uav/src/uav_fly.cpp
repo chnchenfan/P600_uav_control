@@ -125,5 +125,10 @@ int main(int argc, char *argv[])
     ROS_INFO("即将降落");
     iris0.cmd.land();
     ROS_INFO("降落成功！！！！");
+    //让Driver节点一直运行
+    while(ros::ok()){
+        r.sleep();
+        ros::spinOnce();
+    }
     ROS_INFO("程序结束");
 }

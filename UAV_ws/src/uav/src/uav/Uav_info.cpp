@@ -25,10 +25,10 @@ bool Uav_info::isArrived()
     biasPos = targetPos - currentPos;
 
     cout<<"距离目标点的距离为 ="<< biasPos.norm() <<endl;
-    if(biasPos.norm()<0.3)
+    if(biasPos.norm()<0.2)
     {
         ros::Duration(1).sleep();
-        if(biasPos.norm()<0.3)
+        if(biasPos.norm()<0.2)
         {
             return true;
         }
@@ -90,8 +90,7 @@ void Uav_info::mr_state_callback(const mavros_msgs::State::ConstPtr& mavrosstate
 
 void Uav_info::RC_callback(const mavros_msgs::RCIn::ConstPtr& RCmsg)
 {
-//   ROS_INFO("RCin->channel9: %d", msg->channels.at(9));
-
+//   这里的RCmsg->channels.at(9) 中的9是对应的通道8，往下按生效
     if(RCmsg->channels.at(9) >1500)
     {
         RC_control = true;
