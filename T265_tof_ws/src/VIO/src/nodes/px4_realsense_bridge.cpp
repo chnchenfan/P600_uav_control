@@ -29,8 +29,8 @@ PX4_Realsense_Bridge::PX4_Realsense_Bridge(const ros::NodeHandle& nh): nh_(nh) {
   last_callback_time = ros::Time::now();
   status_mutex_.reset(new std::mutex);
   worker_ = std::thread(&PX4_Realsense_Bridge::publishSystemStatus, this);
-  nh.param("serial_port", portName, std::string("/dev/tof"));//具体的哪一个串口
-  nh.param("baud_rate", baud_rate, 115200);//该串口的波特率
+  nh.param("serial_tof_port", portName, std::string("/dev/tof"));//具体的哪一个串口
+  nh.param("baud_tof_rate", baud_rate, 115200);//该串口的波特率
   serial_obj = new mySerial::mySerial(portName, baud_rate); //以上参数赋值给定义的串口对象
 
 };
