@@ -38,7 +38,6 @@ class PX4_Realsense_Bridge {
   ros::NodeHandle nh_;
   // Subscribers
   ros::Subscriber odom_sub_;
-  ros::Subscriber tof_sub_;
   // Publishers
   ros::Publisher mavros_odom_pub_;
   ros::Publisher mavros_system_status_pub_;
@@ -49,7 +48,6 @@ class PX4_Realsense_Bridge {
   std::unique_ptr<std::mutex> status_mutex_;
 
   void odomCallback(const nav_msgs::Odometry& msg);
-  void tofCallback(const sensor_msgs::Range& msg);
   bool flag_first_pose_received{false};
   ros::Time last_callback_time;
 

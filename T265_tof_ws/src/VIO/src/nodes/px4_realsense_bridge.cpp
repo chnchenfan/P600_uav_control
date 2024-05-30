@@ -14,17 +14,10 @@ mySerial::mySerial *serial_obj;
 namespace bridge {
 
 PX4_Realsense_Bridge::PX4_Realsense_Bridge(const ros::NodeHandle& nh): nh_(nh) {
-
-  // initialize subscribers
-  odom_sub_ = nh_.subscribe<const nav_msgs::Odometry&>(
-      "/camera/odom/sample_throttled", 10, &PX4_Realsense_Bridge::odomCallback, this);
-  tof_sub_ = nh_.subscribe<const sensor_msgs::Range&>(
-    "/tfmini_ros_node/TFmini", 100, &PX4_Realsense_Bridge::tofCallback, this);
+  odom_sub_ = nh_.subscribe<const nav_msgs::Odometry&>("/camera/odom/sample_throttled", 10, &PX4_Realsense_Bridge::odomCallback, this);
   // publishers
-  mavros_odom_pub_ =
-      nh_.advertise<nav_msgs::Odometry>("/mavros/odometry/out", 10);
-  mavros_system_status_pub_ =
-      nh_.advertise<mavros_msgs::CompanionProcessStatus>("/mavros/companion_process/status", 1);
+  mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("/mavros/odometry/out", 10);
+  mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>("/mavros/companion_process/status", 1);
 
   last_callback_time = ros::Time::now();
   status_mutex_.reset(new std::mutex);
@@ -93,10 +86,6 @@ void PX4_Realsense_Bridge::odomCallback(const nav_msgs::Odometry& msg) {
   }
 }
 
-void PX4_Realsense_Bridge::tofCallback(const sensor_msgs::Range& msg) {
-
-  // output.pose.pose.position.z = msg.range;
-}
 
 void PX4_Realsense_Bridge::publishSystemStatus(){
   while(ros::ok()){
