@@ -8,6 +8,7 @@ source /opt/ros/noetic/setup.bash
 source /home/ywb/.bashrc
 
 gnome-terminal --window -e 'bash -c "roscore; exec bash"' \
---tab -e 'bash -c "sleep 5; roslaunch mavros px4.launch; exec bash"' \
---tab -e 'bash -c "sleep 5; source /home/wjl/UAV_project/T265_tof_ws/devel/setup.bash && roslaunch px4_realsense_bridge bridge.launch; exec bash"' \
+--tab -e 'bash -c "sleep 2; roslaunch mavros px4.launch; exec bash"' \
+--tab -e 'bash -c "sleep 2; source /home/wjl/UAV_project/T265_tof_ws/devel/setup.bash && roslaunch px4_realsense_bridge bridge.launch; exec bash"' \
 
+gnome-terminal --window -e 'bash -c "sleep 6; rostopic echo /mavros/local_position/pose; exec bash"' \
