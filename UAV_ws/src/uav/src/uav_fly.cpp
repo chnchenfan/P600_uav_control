@@ -3,16 +3,17 @@
 //判断是否到达指定位置
 void IsArrived(Uav_info &iris,double x,double y,double z){
     ros::Rate r(30);
+    iris.Set_pose(x,y,z);
     while(ros::ok()){
         if(iris.isArrived())
         {
             ROS_INFO("炸鸡已到达起点上方");
             ros::Duration(5).sleep();
-            iris.Set_pose(x,y,z);
             break;
         }
         else
         {
+            iris.Set_pose(x,y,z);
             std::cout<<"正在前往x:"<<x<<" y:"<<y<<" z:"<<z<<std::endl;
         }
         r.sleep();
@@ -41,8 +42,6 @@ void Gazebo_test(Uav_info &iris){
             IsArrived(iris,0,0,0.5);
 
             // //正方形飞行
-            // IsArrived(iris,1,0,1);
-            // IsArrived(iris,1,1,1);
             // IsArrived(iris,0,1,1);
             // IsArrived(iris,0,0,1);
             // IsArrived(iris,0,0,0.5);
