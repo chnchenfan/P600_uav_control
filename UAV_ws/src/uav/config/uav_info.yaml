@@ -1,0 +1,6 @@
+#判断是否载入该yaml文件
+load_param_flag: 1
+
+#判读是否有组名,0无组名，1有组名
+group_flag: 0
+modle_name: iris_0

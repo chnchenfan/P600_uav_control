@@ -2,20 +2,29 @@
 
 Uav_info::Uav_info(ros::NodeHandle& nh,std::string model_name):cmd(nh,model_name)
 {
-
     setpoint_pos.x=0;
     setpoint_pos.y=0;
-    setpoint_pos.z=1;
+    setpoint_pos.z=0.5;
     RC_control = true;
-    rc_sub = nh.subscribe<mavros_msgs::RCIn>("/mavros/rc/in",10,&Uav_info::RC_callback, this);
     this->model_name=model_name;
-    local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
-    mavros_state_sub = nh.subscribe<mavros_msgs::State>("/mavros/state",10,&Uav_info::mr_state_callback, this);
+    int flag;
+    nh.getParam("group_flag", flag);
+    if(flag==0){
+        rc_sub = nh.subscribe<mavros_msgs::RCIn>("/mavros/rc/in",10,&Uav_info::RC_callback, this);
+        local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
+        mavros_state_sub = nh.subscribe<mavros_msgs::State>("/mavros/state",10,&Uav_info::mr_state_callback, this);
+    }else if(flag==1){
+        rc_sub = nh.subscribe<mavros_msgs::RCIn>(model_name+"/mavros/rc/in",10,&Uav_info::RC_callback, this);
+        local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>(model_name+"/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
+        mavros_state_sub = nh.subscribe<mavros_msgs::State>(model_name+"/mavros/state",10,&Uav_info::mr_state_callback, this);
+    }else{
+        ROS_INFO("参数加载失败！！！");
+    }
+    
 }
 
 Uav_info::~Uav_info()
 {
-
 }
 
 
@@ -23,7 +32,6 @@ bool Uav_info::isArrived()
 {
     targetPos << setpoint_pos.x, setpoint_pos.y, setpoint_pos.z;
     biasPos = targetPos - currentPos;
-
     cout<<"距离目标点的距离为 ="<< biasPos.norm() <<endl;
     if(biasPos.norm()<0.2)
     {
@@ -55,7 +63,6 @@ void Uav_info::Set_arm_offboard(){
     ROS_INFO("即将进入offboard");
     while(ros::ok() && current_mavros_state.mode != "OFFBOARD")
     {
-        // ROS_INFO("333");
         cmd.move(0, 0,setpoint_pos.z,"ENU");
         cmd.offboard();
         ros::spinOnce();
@@ -63,13 +70,12 @@ void Uav_info::Set_arm_offboard(){
     ROS_INFO("进入offboard成功");
 }
 void Uav_info::Set_pose(double x,double y,double z){
+    std::cout<<"设置期望的目标点为："<<x<<" "<<y<<" "<<z<<std::endl;
     setpoint_pos.x=x;
     setpoint_pos.y=y;
     setpoint_pos.z=z;
     this->cmd.move(x,y,z);
 }
-
-
 
 void Uav_info::mr_localpose_callback(const geometry_msgs::PoseStampedConstPtr& localposemsg)
 {
