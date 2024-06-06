@@ -100,7 +100,6 @@ int main(int argc, char *argv[])
     iris0.setpoint_pos.z=0.5;
     Gazebo_test(iris0);//仿真测试
     // path_planning(iris0);//实物测试
-
     ROS_INFO("即将降落");
     iris0.cmd.land();
     ROS_INFO("降落成功！！！！");
