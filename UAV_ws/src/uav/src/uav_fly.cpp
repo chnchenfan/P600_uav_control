@@ -97,7 +97,6 @@ int main(int argc, char *argv[])
     std::string modle_name;
     nh.getParam("modle_name", modle_name);;    
     Uav_info iris0(nh,modle_name);
-
     iris0.setpoint_pos.z=0.5;
     Gazebo_test(iris0);//仿真测试
     // path_planning(iris0);//实物测试

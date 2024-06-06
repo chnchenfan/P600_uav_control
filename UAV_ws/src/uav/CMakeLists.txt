@@ -18,8 +18,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslaunch
   rospy
-  std_msgs
   message_generation
+  std_msgs
 )
 
 

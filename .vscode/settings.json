@@ -65,5 +65,6 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/wjl/UAV_project/Uwb_ws/src/nlink_parser/extern/serial/tests"
 }
