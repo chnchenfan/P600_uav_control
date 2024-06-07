@@ -50,7 +50,25 @@ bool Uav_info::isArrived()
         return false;
     }
 }
-
+void Uav_info::IsArrived(double x,double y,double z){
+    ros::Rate r(30);
+    Set_pose(x,y,z);
+    while(ros::ok()){
+        if(isArrived())
+        {
+            ROS_INFO("炸鸡已到达上方");
+            ros::Duration(3).sleep();
+            break;
+        }
+        else
+        {
+            Set_pose(x,y,z);
+            std::cout<<"正在前往x:"<<x<<" y:"<<y<<" z:"<<z<<std::endl;
+        }
+        r.sleep();
+        ros::spinOnce();    
+    }
+}
 void Uav_info::Set_arm_offboard(){
     ros::Rate loop_rate(30);
     while(ros::ok() && !current_mavros_state.armed)

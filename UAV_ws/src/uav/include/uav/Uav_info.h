@@ -24,7 +24,8 @@ public:
     geometry_msgs::Point setpoint_pos;//记录当前的期望值
     Uav_info(ros::NodeHandle& nh,std::string model_name);
     ~Uav_info();
-    bool isArrived();
+    bool isArrived();//判断当前位置和目标位置是否小于某一阈值
+    void IsArrived(double x,double y,double z);//（基于初始位置）判断无人机是否到达目标点，没有则发送期望信息
     void Set_arm_offboard();//设置起飞进入offboard
     void Set_pose(double x,double y,double z);//发送世界坐标系的期望位置
     bool RC_control;//遥控器连接状态
