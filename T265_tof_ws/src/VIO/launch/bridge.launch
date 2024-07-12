@@ -1,8 +1,5 @@
 <launch>
   <!--group ns="uav2"-->
-
-    <param name="serial_tof_port" type="string" value="/dev/tof" />
-    <param name="baud_tof_rate" type="int" value="115200" />
     <!-- Launch static transform publishers 1.5708 -->
     <node pkg="tf" type="static_transform_publisher" name="tf_baseLink_cameraPose"
           args="0.15 0 0.1 0 0 0 base_link camera_t265_pose_frame 1000"/>
