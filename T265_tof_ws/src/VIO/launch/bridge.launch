@@ -1,5 +1,4 @@
 <launch>
-  <!--group ns="uav2"-->
     <!-- Launch static transform publishers 1.5708 -->
     <node pkg="tf" type="static_transform_publisher" name="tf_baseLink_cameraPose"
           args="0.15 0 0.1 0 0 0 base_link camera_t265_pose_frame 1000"/>
@@ -46,7 +45,4 @@
     <node name="px4_realsense_bridge_node" pkg="px4_realsense_bridge" type="px4_realsense_bridge_node" output="screen" >
       <rosparam param="input_topic" subst_value="True">$(arg input_topic)</rosparam>
     </node>
-
-    
-  <!--/group-->
 </launch>
