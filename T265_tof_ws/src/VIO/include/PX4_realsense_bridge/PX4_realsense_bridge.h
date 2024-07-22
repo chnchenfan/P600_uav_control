@@ -9,7 +9,6 @@
 #include <sensor_msgs/Range.h>
 #include <thread>
 #include <mutex>
-
 namespace bridge {
 
 enum class MAV_STATE {
@@ -28,11 +27,8 @@ class PX4_Realsense_Bridge {
 public:
     PX4_Realsense_Bridge(const ros::NodeHandle& nh,std::string model_name);
     ~PX4_Realsense_Bridge();
-
     void publishSystemStatus();
-
     std::thread worker_;
-
 
 private:
     ros::NodeHandle nh_;
@@ -41,7 +37,6 @@ private:
     // Publishers
     ros::Publisher mavros_odom_pub_;
     ros::Publisher mavros_system_status_pub_;
-
     MAV_STATE system_status_{MAV_STATE::MAV_STATE_UNINIT};
     MAV_STATE last_system_status_{MAV_STATE::MAV_STATE_UNINIT};
 

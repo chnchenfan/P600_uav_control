@@ -5,10 +5,10 @@ Uav_info::Uav_info(ros::NodeHandle& nh,std::string model_name):cmd(nh,model_name
     setpoint_pos.x=0;
     setpoint_pos.y=0;
     setpoint_pos.z=0.5;
-    RC_control = true;
+    RC_control = false;
     this->model_name=model_name;
     int flag;
-    nh.getParam("group_flag", flag);
+    nh.getParam("/group_flag", flag);
     if(flag==0){
         rc_sub = nh.subscribe<mavros_msgs::RCIn>("/mavros/rc/in",10,&Uav_info::RC_callback, this);
         local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
@@ -114,8 +114,8 @@ void Uav_info::mr_state_callback(const mavros_msgs::State::ConstPtr& mavrosstate
 
 void Uav_info::RC_callback(const mavros_msgs::RCIn::ConstPtr& RCmsg)
 {
-//   这里的RCmsg->channels.at(9) 中的9是对应的通道8，往下按生效
-    if(RCmsg->channels.at(9) >1500)
+//   这里的RCmsg->channels.at(6) 中的6是对应的通道7（SWA），往下按生效
+    if(RCmsg->channels.at(6) >1500)
     {
         RC_control = true;
     }

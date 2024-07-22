@@ -8,4 +8,4 @@ modle_name: iris_0
 # tof端口名
 tof_usb: /dev/tof
 # tof波特率
-tof_usb_rate: 115200  
+baud_tof_rate: 115200  

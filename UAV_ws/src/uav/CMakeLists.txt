@@ -116,6 +116,10 @@ target_link_libraries(Driver0 ${catkin_LIBRARIES})
 add_executable(uav src/uav_fly.cpp ${SRC_UAV})
 target_link_libraries(uav ${catkin_LIBRARIES})
 
+add_executable(uav_gazebo src/uav_fly_gazebo.cpp ${SRC_UAV})
+target_link_libraries(uav_gazebo ${catkin_LIBRARIES})
+
+
 add_executable(test1 src/test1.cpp)
 target_link_libraries(test1 ${catkin_LIBRARIES})
 

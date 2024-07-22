@@ -17,7 +17,7 @@ PX4_Realsense_Bridge::PX4_Realsense_Bridge(const ros::NodeHandle& nh,std::string
     odom_sub_ = nh_.subscribe<const nav_msgs::Odometry&>("/camera/odom/sample_throttled", 10, &PX4_Realsense_Bridge::odomCallback, this);
     // publishers
     int flag;
-    nh_.getParam("group_flag", flag);
+    nh_.getParam("/group_flag", flag);
     if(flag == 0){
         mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("/mavros/odometry/out", 10);
         mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>("/mavros/companion_process/status", 1);
@@ -30,9 +30,8 @@ PX4_Realsense_Bridge::PX4_Realsense_Bridge(const ros::NodeHandle& nh,std::string
     last_callback_time = ros::Time::now();
     status_mutex_.reset(new std::mutex);
     worker_ = std::thread(&PX4_Realsense_Bridge::publishSystemStatus, this);
-
-    nh.param("tof_usb", portName, std::string("/dev/tof"));//具体的哪一个串口
-    nh.param("tof_usb_rate", baud_rate, 115200);//该串口的波特率
+    nh.param("/tof_usb", portName, std::string("/dev/tof"));//具体的哪一个串口
+    nh.param("/baud_tof_rate", baud_rate, 115200);//该串口的波特率
     serial_obj = new mySerial::mySerial(portName, baud_rate); //以上参数赋值给定义的串口对象
 
 };
