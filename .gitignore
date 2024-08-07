@@ -5,3 +5,5 @@ Makefile
 CATKIN_IGNORE
 build/
 devel/
+UAV_ws/src/uav/config/uav_info.bag
+UAV_ws/src/uav/config/uav_info.bag.active

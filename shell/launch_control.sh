@@ -12,4 +12,5 @@ gnome-terminal --window -e "bash -c 'roscore; exec bash'" \
 --tab -e "bash -c 'sleep 1;source $uav_environment;roslaunch uav uav_yaml.launch; exec bash'" \
 --tab -e "bash -c 'sleep 2; roslaunch mavros px4.launch; exec bash'" \
 --tab -e "bash -c 'sleep 2; source $t265_tof_environment && roslaunch px4_realsense_bridge bridge.launch; exec bash'" \
+--tab -e "bash -c 'cd ~/UAV_project/UAV_ws/src/uav/config;rosbag record -a -O uav_info; exec bash'" \
 --tab -e "bash -c 'sleep 4; rostopic echo /mavros/local_position/pose; exec bash'" \
