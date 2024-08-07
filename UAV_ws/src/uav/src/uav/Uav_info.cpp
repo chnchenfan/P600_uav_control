@@ -10,15 +10,18 @@ Uav_info::Uav_info(ros::NodeHandle& nh,std::string model_name):cmd(nh,model_name
     int flag;
     nh.getParam("/group_flag", flag);
     if(flag==0){
+        std::cout<<"未使用组名"<<std::endl;
         rc_sub = nh.subscribe<mavros_msgs::RCIn>("/mavros/rc/in",10,&Uav_info::RC_callback, this);
         local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
         mavros_state_sub = nh.subscribe<mavros_msgs::State>("/mavros/state",10,&Uav_info::mr_state_callback, this);
     }else if(flag==1){
-        rc_sub = nh.subscribe<mavros_msgs::RCIn>(model_name+"/mavros/rc/in",10,&Uav_info::RC_callback, this);
-        local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>(model_name+"/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
-        mavros_state_sub = nh.subscribe<mavros_msgs::State>(model_name+"/mavros/state",10,&Uav_info::mr_state_callback, this);
+        std::cout<<"使用了组名,组名为:"<<model_name<<std::endl;
+        rc_sub = nh.subscribe<mavros_msgs::RCIn>("/"+model_name+"/mavros/rc/in",10,&Uav_info::RC_callback, this);
+        local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/"+model_name+"/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
+        mavros_state_sub = nh.subscribe<mavros_msgs::State>("/"+model_name+"/mavros/state",10,&Uav_info::mr_state_callback, this);
     }else{
-        ROS_INFO("参数加载失败！！！");
+        ROS_ERROR("参数加载失败，请检查重新启动！！！");
+        exit(0);
     }
     
 }

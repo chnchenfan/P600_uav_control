@@ -22,10 +22,11 @@ PX4_Realsense_Bridge::PX4_Realsense_Bridge(const ros::NodeHandle& nh,std::string
         mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("/mavros/odometry/out", 10);
         mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>("/mavros/companion_process/status", 1);
     }else if(flag==1){
-        mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>(model_name+"/mavros/odometry/out", 10);
-        mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>(model_name+"/mavros/companion_process/status", 1);
+        mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("/"+model_name+"/mavros/odometry/out", 10);
+        mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>("/"+model_name+"/mavros/companion_process/status", 1);
     }else{
-        ROS_INFO("参数传入失败！！！");
+        ROS_ERROR("参数加载失败，请检查重新启动！！！");
+        exit(0);
     }
     last_callback_time = ros::Time::now();
     status_mutex_.reset(new std::mutex);

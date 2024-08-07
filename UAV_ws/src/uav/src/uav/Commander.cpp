@@ -3,9 +3,9 @@
 Commander::Commander(ros::NodeHandle& nh,std::string model_name)
 {
     //发布
-    position_target_pub = nh.advertise<geometry_msgs::PoseStamped>("/gi/set_pose/position", 10);
-    yaw_target_pub = nh.advertise<std_msgs::Float64>("/gi/set_pose/orientation", 10);//发送偏航角度
-    custom_activity_pub = nh.advertise<std_msgs::String>("/gi/set_activity/type", 10);
+    position_target_pub = nh.advertise<geometry_msgs::PoseStamped>("/wjl/set_pose/position", 10);
+    yaw_target_pub = nh.advertise<std_msgs::Float64>("/wjl/set_pose/orientation", 10);//发送偏航角度
+    custom_activity_pub = nh.advertise<std_msgs::String>("/wjl/set_activity/type", 10);
 }
 
 Commander::~Commander()
