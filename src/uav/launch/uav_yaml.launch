@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <rosparam file="$(find uav)/config/uav_info.yaml" command="load" />
+
+    <!-- 下面是estimator_input是给飞控提供外部定位消息源 -->
+     <!-- 0：gps定位，1：gazebo仿真世界真实位置信息，2：t265+tof定位 -->
+    <arg name="estimator_input" value="0" />
+    <group if="$(eval arg('estimator_input') == '1')">
+
+    </group>
+
+    <group unless="$(eval arg('estimator_input') == '2')">
+        
+    </group>
+</launch>

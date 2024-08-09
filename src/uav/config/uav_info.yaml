@@ -1,0 +1,13 @@
+#判断是否载入该yaml文件
+load_param_flag: 1
+
+#判读是否有组名,0无组名，1有组名
+group_flag: 0
+modle_name: uav0
+
+# 定位信息选择，0-gps,1-gazebo仿真真值
+estimator_num: 0
+# tof端口名
+tof_usb: /dev/tof
+# tof波特率
+baud_tof_rate: 115200  
