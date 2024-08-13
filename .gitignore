@@ -1,9 +1,8 @@
 
 .vscode/
-*.dox
-Makefile
-CATKIN_IGNORE
+.catkin_workspace
 build/
 devel/
-UAV_ws/src/uav/config/uav_info.bag
-UAV_ws/src/uav/config/uav_info.bag.active
+src/uav/config/uav_info.bag
+src/uav/config/uav_info.bag.active
+src/uav/src/test1.cpp

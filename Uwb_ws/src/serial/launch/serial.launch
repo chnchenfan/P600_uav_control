@@ -1,8 +1,0 @@
-<launch>
-  <!--group ns="uav2"-->
-    <param name="serial_port" type="string" value="/dev/ttyUSB0" />
-    <param name="baud_rate" type="int" value="115200" />
-    <node pkg="serial" type="serial_node" name="serial_node" output="screen">
-    </node>
-  <!--/group-->
-</launch>

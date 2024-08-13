@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-    <rosparam file="$(find uav)/config/uav_info.yaml" command="load" />
-</launch>
