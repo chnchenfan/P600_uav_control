@@ -1,4 +1,28 @@
-#include "common.h"
+
+// ros
+#include <iostream>
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <std_msgs/Float64.h>
+#include <geometry_msgs/PoseStamped.h>
+
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <Eigen/Eigen>
+#include <Eigen/StdVector>
+
+#include <math.h>
+// mavros
+#include <mavros_msgs/PositionTarget.h>
+#include <mavros_msgs/State.h>//状态
+#include <mavros_msgs/SetMode.h>
+#include <mavros_msgs/CommandBool.h>
+#include "other/Print_.h"
+#define pi 3.14159
+#define TAKEOFF_HEIGHT 0.5
+#define CAMERA_INT_HEIGHT 0.4
+
+using namespace std;
 //主要是
 class Driver
 {
@@ -53,5 +77,4 @@ private:
   void set_target_position_callback(const geometry_msgs::PoseStampedConstPtr& msg);
   void set_target_yaw_callback(const std_msgs::Float64ConstPtr& msg);
   void custom_activity_callback(const std_msgs::StringConstPtr& msg);
-  void Get_base_link_cb(const boost::shared_ptr<geometry_msgs::PoseStamped>& msg);
 };

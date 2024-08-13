@@ -1,10 +1,20 @@
 # !/bin/bash
 workplace_environment_var=~/UAV_project/devel/setup.bash
 gnome-terminal --window -e "bash -c 'roscore; exec bash'" \
---tab -e "bash -c 'sleep 2;source $workplace_environment_var;roslaunch uav uav_yaml.launch; exec bash'" \
---tab -e "bash -c 'sleep 2.1;roslaunch px4 uav_v2.launch; exec bash'" \
---tab -e "bash -c 'sleep 6;source $workplace_environment_var;rosrun uav uav_gazebo; exec bash'" \
---tab -e "bash -c 'sleep 3;source $workplace_environment_var;roslaunch uav uav_Drive.launch; exec bash'" \
+--tab -e "bash -c 'sleep 2;source $workplace_environment_var;roslaunch uav uav_yaml.launch estimator_flag:=w1; exec bash'" \
+--tab -e "bash -c 'sleep 3;source $workplace_environment_var;roslaunch uav gazebo_uav_drvier.launch; exec bash'" \
 --tab -e "bash -c 'cd ~/UAV_project/src/uav/config;rosbag record -a -O uav_info; exec bash'" \
-# --tab -e "bash -c 'sleep 2;roslaunch px4 uav_v1.launch; exec bash'" #有组名
-#使用前及的看是否使用了组名
+--tab -e "bash -c 'sleep 2.5;
+source $workplace_environment_var;
+export ROS_PACKAGE_PATH=/home/wjl/PX4-Autopilot:\$ROS_PACKAGE_PATH;
+export ROS_PACKAGE_PATH=\$ROS_PACKAGE_PATH:~/PX4-Autopilot/Tools/sitl_gazebo;
+roslaunch uav gazebo_px4_startup.launch ns_flag:=g1;exec bash'" \
+
+##  组名说明
+# 启动uav中的launch文件前面的申明的所有变量是为了保证环境变量都能正常用
+# 需要和config中的group_flag标志对应
+# group_flag:0  启动  gazebo_px4_startup.launch ns_flag:=g0  无组名
+# group_flag:1  启动  gazebo_px4_startup.launch ns_flag:=g1  有组名
+
+## 定位说明
+# gazebo仿真默认使用gazbeo真值定位,见roslaunch uav uav_yaml.launch estimator_flag:=w1

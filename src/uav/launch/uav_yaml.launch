@@ -1,15 +1,17 @@
-<?xml version="1.0"?>
+<!--该文件包含无人机起飞的信息和外部定位消息源选择 -->
 <launch>
     <rosparam file="$(find uav)/config/uav_info.yaml" command="load" />
-
-    <!-- 下面是estimator_input是给飞控提供外部定位消息源 -->
-     <!-- 0：gps定位，1：gazebo仿真世界真实位置信息，2：t265+tof定位 -->
-    <arg name="estimator_input" value="0" />
-    <group if="$(eval arg('estimator_input') == '1')">
-
+    <!-- 下面是estimator_flag是给飞控提供外部定位消息源 -->
+     <!-- w0：gps定位，w1：gazebo仿真世界真实位置信息，w2：t265+tof定位 -->
+    <arg name="estimator_flag" default="w0"/>
+    <param name="estimator_flag" value="$(arg estimator_flag)" />
+    <!-- gazebo真值定位 -->
+    <group if="$(eval arg('estimator_flag') == 'w1')">
+        <node pkg="uav" type="pos_estimator0" name="pos_estimator0" output="screen"/>
+        <node pkg="uav" type="gazebo_pose0" name="gazebo_pose0" output="screen"/>
     </group>
-
-    <group unless="$(eval arg('estimator_input') == '2')">
-        
+    <!-- t265+tof定位 -->
+    <group if="$(eval arg('estimator_flag') == 'w2')">
+        <include file="$(find px4_realsense_bridge)/launch/bridge.launch"/>     
     </group>
 </launch>

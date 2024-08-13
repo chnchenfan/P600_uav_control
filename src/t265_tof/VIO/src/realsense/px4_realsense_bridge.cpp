@@ -1,12 +1,4 @@
-#include "../../include/PX4_realsense_bridge/PX4_realsense_bridge.h"
-
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <string>
-#include <thread>
-#include <sensor_msgs/Range.h>
-#include <mySerial.h>
+#include "realsense/px4_realsense_bridge.h"
 std::string portName;
 int baud_rate;
 float dist;

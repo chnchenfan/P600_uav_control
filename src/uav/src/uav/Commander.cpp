@@ -2,10 +2,20 @@
 
 Commander::Commander(ros::NodeHandle& nh,std::string model_name)
 {
-    //发布
-    position_target_pub = nh.advertise<geometry_msgs::PoseStamped>("/wjl/set_pose/position", 10);
-    yaw_target_pub = nh.advertise<std_msgs::Float64>("/wjl/set_pose/orientation", 10);//发送偏航角度
-    custom_activity_pub = nh.advertise<std_msgs::String>("/wjl/set_activity/type", 10);
+    int flag;
+    nh.getParam("/group_flag", flag);
+    if(flag==0){
+        position_target_pub = nh.advertise<geometry_msgs::PoseStamped>("/wjl/set_pose/position", 10);
+        yaw_target_pub = nh.advertise<std_msgs::Float64>("/wjl/set_pose/orientation", 10);//发送偏航角度
+        custom_activity_pub = nh.advertise<std_msgs::String>("/wjl/set_activity/type", 10);
+    }else if(flag==1){
+        position_target_pub = nh.advertise<geometry_msgs::PoseStamped>("/"+model_name+"/wjl/set_pose/position", 10);
+        yaw_target_pub = nh.advertise<std_msgs::Float64>("/"+model_name+"/wjl/set_pose/orientation", 10);//发送偏航角度
+        custom_activity_pub = nh.advertise<std_msgs::String>("/"+model_name+"/wjl/set_activity/type", 10);
+    }else{
+        ROS_ERROR("参数加载失败，请检查重新启动！！！");
+        exit(0);
+    }
 }
 
 Commander::~Commander()
@@ -64,7 +74,7 @@ void Commander::takeoff()
 
 void Commander::set_pose(double x, double y, double z, string frame)
 {
-    // FLU是基于当前的飞行位置作为为初始位置，一般是视觉定位
+    // FLU是基于当前的飞行位置作为为初始位置
     pose.header.stamp = ros::Time::now();
     if(frame == "FLU")
     {
@@ -72,7 +82,7 @@ void Commander::set_pose(double x, double y, double z, string frame)
     }
     else
     {
-        pose.header.frame_id = "map";//这里是世界定位，也就是飞机的起飞位置，一般是使用uwb
+        pose.header.frame_id = "map";//这里是世界定位，也就是飞机的起飞位置
     }
     
     pose.pose.position.x = x;

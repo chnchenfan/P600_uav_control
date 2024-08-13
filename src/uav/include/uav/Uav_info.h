@@ -1,20 +1,12 @@
-#pragma once
-#include <math.h>
-#include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <mavros_msgs/CommandBool.h>
+// mavros
+#include <mavros_msgs/PositionTarget.h>
+#include <mavros_msgs/RCIn.h>//遥控器
+#include <mavros_msgs/State.h>//状态
 #include <mavros_msgs/SetMode.h>
-#include <mavros_msgs/State.h>
+#include <mavros_msgs/CommandBool.h>
 #include <unistd.h>
-#include <ros/time.h>
-#include <ros/duration.h>
-#include <string>
-#include "Uav_info.h"
-#include "Commander.h"
-#include "Driver.h"
-#include "common.h"
-
-
+#include "uav/Commander.h"
+#include "other/Print_.h"
 class Uav_info
 {
 public:
@@ -49,7 +41,6 @@ private:
     
     void mr_localpose_callback(const geometry_msgs::PoseStampedConstPtr& localposemsg);
     void mr_state_callback(const mavros_msgs::State::ConstPtr& mavrosstatemsg);
-    void key_control_cb(const boost::shared_ptr<const geometry_msgs::Point>& msg);
     void RC_callback(const mavros_msgs::RCIn::ConstPtr& RCmsg);
 };
 

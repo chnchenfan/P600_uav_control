@@ -121,32 +121,18 @@ endif(NOT CMAKE_BUILD_TYPE)
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  include
   ${catkin_INCLUDE_DIRS}
-  ./include/PX4_realsense_bridge
+  ${PROJECT_SOURCE_DIR}/include
   ${PCL_INCLUDE_DIRS}
   ${YAML_CPP_INCLUDE_DIR}
 )
-
-## Declare a C++ library
-# add_library(avoidance
-#   src/${PROJECT_NAME}/avoidance.cpp
-# )
-set(PX4_REALSENSE_BRIDGE_CPP_FILES   "src/nodes/px4_realsense_bridge.cpp"
-                              "src/nodes/px4_realsense_bridge_node.cpp"
-)
-
-add_library(px4_realsense_bridge     "${PX4_REALSENSE_BRIDGE_CPP_FILES}")
+add_executable(px4_realsense_bridge_node src/realsense/px4_realsense_bridge.cpp src/realsense/mySerial.cpp src/px4_realsense_bridge_node.cpp)
+target_link_libraries(px4_realsense_bridge_node ${catkin_LIBRARIES})
 
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-add_dependencies(px4_realsense_bridge ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Declare a C++ executable
-# add_executable(avoidance_node src/avoidance_node.cpp)
-add_executable(px4_realsense_bridge_node src/nodes/px4_realsense_bridge_node.cpp src/nodes/mySerial.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -157,10 +143,7 @@ add_executable(px4_realsense_bridge_node src/nodes/px4_realsense_bridge_node.cpp
 #   ${catkin_LIBRARIES}
 #   ${PCL_LIBRARIES}
 # )
-target_link_libraries(px4_realsense_bridge_node
-  px4_realsense_bridge
-  ${catkin_LIBRARIES}
-  ${YAML_CPP_LIBRARIES})
+
 
 #############
 ## Install ##

@@ -97,23 +97,22 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+
 # 定义与飞行器有关的源文件变量
-set(SRC_UAV src/uav/Uav_info.cpp src/uav/Commander.cpp)
-# 定义与机械臂有关的源文件变量
-set(SRC_ARM src/arm/arm_multi_com.cpp src/arm/arm_info.cpp)
-
-add_executable(Driver0 src/uav/Driver_0.cpp src/uav/Driver.cpp)
+set(SRC_UAV src/uav/Uav_info.cpp src/uav/Commander.cpp src/other/Print_.cpp)
+# 位置估计节点
+add_executable(pos_estimator0 src/estimator/z_pos_estimator0.cpp src/estimator/pos_estimator.cpp src/other/Print_.cpp)
+target_link_libraries(pos_estimator0 ${catkin_LIBRARIES})
+add_executable(gazebo_pose0 src/estimator/z_gazebo_pose0.cpp src/other/Print_.cpp)
+target_link_libraries(gazebo_pose0 ${catkin_LIBRARIES})
+# 飞行控制节点
+add_executable(Driver0 src/uav/z_Driver0.cpp src/uav/Driver.cpp src/other/Print_.cpp)
 target_link_libraries(Driver0 ${catkin_LIBRARIES})
+add_executable(uav_real0 src/uav_real0.cpp ${SRC_UAV})
+target_link_libraries(uav_real0 ${catkin_LIBRARIES})
+add_executable(uav_gazebo0 src/uav_gazebo0.cpp ${SRC_UAV})
+target_link_libraries(uav_gazebo0 ${catkin_LIBRARIES})
 
-add_executable(uav src/uav_fly.cpp ${SRC_UAV})
-target_link_libraries(uav ${catkin_LIBRARIES})
-
-add_executable(uav_gazebo src/uav_fly_gazebo.cpp ${SRC_UAV})
-target_link_libraries(uav_gazebo ${catkin_LIBRARIES})
-
-
-add_executable(test1 src/test1.cpp)
-target_link_libraries(test1 ${catkin_LIBRARIES})
 
 
 

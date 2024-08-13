@@ -1,4 +1,18 @@
-#include "common.h"
+
+#include <iostream>
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <std_msgs/Float64.h>
+#include <geometry_msgs/Point.h>
+#include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/PoseStamped.h>
+
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <Eigen/Eigen>
+#include <Eigen/StdVector>
+using namespace std;
 //move设置发布的位置信息
 //说明：Commander主要功能是设置当前模式名（activity.data），并发布到Driver中接受设置
 class Commander

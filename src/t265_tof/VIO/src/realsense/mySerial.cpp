@@ -1,8 +1,4 @@
-#include <mySerial.h>
-#include <ros/ros.h>
-#include <iostream>
-#include <stdio.h>
-
+#include "realsense/mySerial.h"
 // #define DEBUG
 
 namespace mySerial

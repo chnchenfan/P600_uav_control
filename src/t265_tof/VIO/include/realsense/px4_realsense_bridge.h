@@ -9,6 +9,13 @@
 #include <sensor_msgs/Range.h>
 #include <thread>
 #include <mutex>
+#include <atomic>
+#include <condition_variable>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <sensor_msgs/Range.h>
+#include "realsense/mySerial.h"
 namespace bridge {
 
 enum class MAV_STATE {
