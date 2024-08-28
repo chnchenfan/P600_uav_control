@@ -10,7 +10,7 @@ int main(int argc,char** argv)
     std::string model_name;
     nh.getParam("/model_name0", model_name); 
     Driver driver(nh,model_name);
-    Printf_green("Driver0节点启动!!!");
+    Print_green("Driver0节点启动!!!");
     driver.start();
     return 0;
 }

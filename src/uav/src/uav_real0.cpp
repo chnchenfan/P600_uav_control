@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     nh.getParam("/model_name0", model_name);    
     Uav_info iris0(nh,model_name);
     iris0.setpoint_pos.z=0.5;
-    Printf_green("uav_real0节点启动!!!");
+    Print_green("uav_real0节点启动!!!");
     path_planning(iris0);//实物测试
     ROS_INFO("即将降落");
     iris0.cmd.land();
@@ -40,9 +40,9 @@ void Judge_param_load(ros::NodeHandle nh){
     nh.getParam("/model_name0", model_name);    
     ROS_INFO("uav节点yaml文件加载成功！");
     if(flag==0 && gn=="g0"){
-        Printf_green("未使用组名!!!");
+        Print_green("未使用组名!!!");
     }else if(flag==1 && gn=="g1"){
-        Printf_green("使用了组名,组名为!!!"+model_name);
+        Print_green("使用了组名,组名为!!!"+model_name);
     }else{
         std::cout<<"/group_flag:"<<flag<<" /ns_flag"<<gn<<std::endl;
         ROS_ERROR("请看uav_yaml文件的group_flag和px4启动launch文件的ns_flag标志是否匹配");

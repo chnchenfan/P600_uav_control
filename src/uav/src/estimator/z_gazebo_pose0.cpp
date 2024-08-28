@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         ROS_ERROR("参数加载失败，请检查重新启动！！！");
         exit(0);
     }
-    Printf_green("gazebo_pose0节点启动!!!");
+    Print_green("gazebo_pose0节点启动!!!");
     ros::Rate r(30);
     while(ros::ok()){
         pose_pub.publish(base_link_pose);

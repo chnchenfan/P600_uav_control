@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     ros::init(argc, argv, "uav_gazebo0");
     ros::NodeHandle nh;
     Judge_param_load(nh);//判断是否加载yaml参数
-    Printf_green("uav_gazebo0节点启动!!!");
+    Print_green("uav_gazebo0节点启动!!!");
     std::string model_name;
     nh.getParam("/model_name0", model_name);
     Uav_info iris0(nh,model_name);
@@ -23,23 +23,24 @@ int main(int argc, char *argv[])
 void Judge_param_load(ros::NodeHandle nh){
     while (!nh.hasParam("/load_param_flag") && !nh.hasParam("/ns_flag"))
   	{
-    	ROS_INFO("uav节点等待参数加载...");
+        std::cout<<"uav节点等待参数加载..."<<std::endl;
+    	// ROS_INFO("uav节点等待参数加载...");
     	ros::Duration(1.0).sleep();
   	}
     int flag;
     std::string gn;
     nh.getParam("/ns_flag", gn);
     nh.getParam("/group_flag", flag);
-    ROS_INFO("uav节点yaml文件加载成功！");
+    std::cout<<"uav节点yaml文件加载成功！"<<std::endl;
     if(flag==0 && gn=="g0"){
-        Printf_green("未使用组名!!!");
+        Print_green("未使用组名!!!");
     }else if(flag==1 && gn=="g1"){
-        Printf_green("使用了组名,组名为!!!");
+        Print_green("使用了组名,组名为!!!");
     }else{
         std::cout<<"/group_flag:"<<flag<<" /ns_flag:"<<gn<<std::endl;
-        ROS_ERROR("请看uav_yaml文件的group_flag和px4启动launch文件的ns_flag标志是否匹配");
-        ROS_ERROR("px4启动launch文件查看gazebo_px4_startup.launch或者real_px4_startup.launch");
-        ROS_ERROR("group_flag:0 对应 ns_flag:g0;   group_flag:1 对应 ns_flag:g1");
+        Print_red("请看uav_yaml文件的group_flag和px4启动launch文件的ns_flag标志是否匹配");
+        Print_red("px4启动launch文件查看gazebo_px4_startup.launch或者real_px4_startup.launch");
+        Print_red("group_flag:0 对应 ns_flag:g0;   group_flag:1 对应 ns_flag:g1");
         exit(0);
     }
 }

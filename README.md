@@ -1,8 +1,18 @@
 # UAV_project
-这是无人机代码控制框架，uav主要是作为控制无人机信息，然后设计
+这是无人机代码控制框架，uav主要是作为控制无人机信息
 ## 说明
+### 下载说明
+- 在主目录克隆下载
+```cpp
+git clone https://gitee.com/whoarewang/uav_project.git UAV_project
+```
+### 配置说明
 - 我将必要的yaml文件放在UAV_ws/uav/config/uav_info.yaml中
-	- 包含是否加入组名，tof的端口号和波特率等
+	- 包含是否加入组名，tof的端口号和波特率设置等
+
+- 在仿真使用中必须添加环境变量，实物可以不同
+	- 在.bashrc中环境变量添加：source ~/UAV_project/devel/setup.bash
+	- 在.zshrc中环境变量添加：source ~/UAV_project/devel/setup.zsh
 
 ## 实物遥控器说明
 - SWA：7通——按下SWA，然后将自稳模式切定高模式，就执行offboard模式
