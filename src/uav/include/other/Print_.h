@@ -1,3 +1,4 @@
-#include <iostream>
-void Printf_green(std::string str);
-void Printf_red(std::string str);
+#include<iostream>
+void Print_green(std::string str);
+void Print_red(std::string str);
+void Print_pink(std::string str);

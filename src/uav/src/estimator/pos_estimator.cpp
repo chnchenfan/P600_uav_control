@@ -4,11 +4,11 @@ Pos_estimator::Pos_estimator(ros::NodeHandle& nh,std::string model_name){
     nh.getParam("/group_flag", flag);
     nh.getParam("/estimator_flag", estimator_flag);
     if(flag==0){
-        Printf_green("未使用组名");
+        Print_green("未使用组名");
         vision_pose_pub = nh.advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 10);
         gazebo_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/wjl/gazebo_real/base_link_pose", 10,&Pos_estimator::gazebo_cb, this);
     }else if(flag==1){
-        Printf_green("使用了组名，组名："+model_name);
+        Print_green("使用了组名，组名："+model_name);
         vision_pose_pub = nh.advertise<geometry_msgs::PoseStamped>("/"+model_name+"/mavros/vision_pose/pose", 10);
         gazebo_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/"+model_name+"/wjl/gazebo_real/base_link_pose", 10,&Pos_estimator::gazebo_cb, this);
     }else{
@@ -16,7 +16,7 @@ Pos_estimator::Pos_estimator(ros::NodeHandle& nh,std::string model_name){
         exit(0);
     }
     if(estimator_flag=="w1"){
-        Printf_green("选择gazebo真实位置信息定位!!!");
+        Print_green("选择gazebo真实位置信息定位!!!");
     }
 }
 void Pos_estimator::run(){

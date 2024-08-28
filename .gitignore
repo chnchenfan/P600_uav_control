@@ -5,4 +5,3 @@ build/
 devel/
 src/uav/config/uav_info.bag
 src/uav/config/uav_info.bag.active
-src/uav/src/test1.cpp
