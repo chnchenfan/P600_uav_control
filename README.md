@@ -7,6 +7,7 @@
 git clone https://gitee.com/whoarewang/uav_project.git UAV_project
 ```
 ### 配置说明
+- 运行前保证与PX4代码版本保持一致，运行px4_version.sh即可
 - 我将必要的yaml文件放在UAV_ws/uav/config/uav_info.yaml中
 	- 包含是否加入组名，tof的端口号和波特率设置等
 
