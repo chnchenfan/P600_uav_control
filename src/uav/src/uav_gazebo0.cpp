@@ -35,7 +35,7 @@ void Judge_param_load(ros::NodeHandle nh){
     if(flag==0 && gn=="g0"){
         Print_green("未使用组名!!!");
     }else if(flag==1 && gn=="g1"){
-        Print_green("使用了组名,组名为!!!");
+        Print_green("使用了组名!!!");
     }else{
         std::cout<<"/group_flag:"<<flag<<" /ns_flag:"<<gn<<std::endl;
         Print_red("请看uav_yaml文件的group_flag和px4启动launch文件的ns_flag标志是否匹配");

@@ -1,39 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <root>
  <tabbed_widget parent="main_window" name="Main Window">
-  <Tab tab_name="tab1" containers="1">
+  <Tab containers="1" tab_name="pos">
    <Container>
-    <DockSplitter orientation="-" sizes="1" count="1">
-     <DockSplitter orientation="|" sizes="0.333333;0.333333;0.333333" count="3">
-      <DockSplitter orientation="-" sizes="0.500394;0.499606" count="2">
+    <DockSplitter count="1" orientation="-" sizes="1">
+     <DockSplitter count="3" orientation="|" sizes="0.333333;0.333333;0.333333">
+      <DockSplitter count="2" orientation="-" sizes="0.5;0.5">
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-0.301886" left="5.720049" right="61.428070" top="1.228364"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.711525" top="1.233151" bottom="-0.309688" left="-0.309688"/>
          <limitY/>
          <curve color="#1f77b4" name="/uav0/mavros/local_position/pose/pose/position/x"/>
          <curve color="#d62728" name="/uav0/mavros/setpoint_raw/local/position/x"/>
         </plot>
        </DockArea>
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="XYPlot">
-         <range bottom="-0.177010" left="-0.336150" right="1.262627" top="1.114032"/>
+        <plot mode="XYPlot" style="Lines" flip_y="false" flip_x="false">
+         <range right="1.313821" top="1.144740" bottom="-0.198102" left="-0.390358"/>
          <limitY/>
-         <curve color="#17becf" name="/uav0/mavros/local_position/pose/pose/position/[x;y]" curve_y="/uav0/mavros/local_position/pose/pose/position/y" curve_x="/uav0/mavros/local_position/pose/pose/position/x"/>
-         <curve color="#bcbd22" name="/uav0/mavros/setpoint_raw/local/position/[x;y]" curve_y="/uav0/mavros/setpoint_raw/local/position/y" curve_x="/uav0/mavros/setpoint_raw/local/position/x"/>
+         <curve color="#17becf" curve_x="/uav0/mavros/local_position/pose/pose/position/x" curve_y="/uav0/mavros/local_position/pose/pose/position/y" name="/uav0/mavros/local_position/pose/pose/position/[x;y]"/>
+         <curve color="#bcbd22" curve_x="/uav0/mavros/setpoint_raw/local/position/x" curve_y="/uav0/mavros/setpoint_raw/local/position/y" name="/uav0/mavros/setpoint_raw/local/position/[x;y]"/>
         </plot>
        </DockArea>
       </DockSplitter>
       <DockArea name="...">
-       <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-        <range bottom="-0.177010" left="5.720049" right="61.428070" top="1.114032"/>
+       <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+        <range right="60.711525" top="1.116947" bottom="-0.170310" left="-0.309688"/>
         <limitY/>
         <curve color="#1ac938" name="/uav0/mavros/local_position/pose/pose/position/y"/>
         <curve color="#ff7f0e" name="/uav0/mavros/setpoint_raw/local/position/y"/>
        </plot>
       </DockArea>
       <DockArea name="...">
-       <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-        <range bottom="-0.171745" left="5.720049" right="61.428070" top="1.153306"/>
+       <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+        <range right="60.711525" top="1.165847" bottom="-0.503940" left="-0.309688"/>
         <limitY/>
         <curve color="#f14cc1" name="/uav0/mavros/setpoint_raw/local/position/z"/>
         <curve color="#9467bd" name="/uav0/mavros/local_position/pose/pose/position/z"/>
@@ -43,21 +43,21 @@
     </DockSplitter>
    </Container>
   </Tab>
-  <Tab tab_name="tab2" containers="1">
+  <Tab containers="1" tab_name="attitude">
    <Container>
-    <DockSplitter orientation="-" sizes="1" count="1">
-     <DockSplitter orientation="|" sizes="0.333333;0.333333;0.333333" count="3">
-      <DockSplitter orientation="-" sizes="0.500394;0.499606" count="2">
+    <DockSplitter count="1" orientation="-" sizes="1">
+     <DockSplitter count="3" orientation="|" sizes="0.333333;0.333333;0.333333">
+      <DockSplitter count="2" orientation="-" sizes="0.5;0.5">
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-0.182576" left="5.720049" right="61.428070" top="0.161880"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.707734" top="0.164463" bottom="-0.180145" left="5.599850"/>
          <limitY/>
          <curve color="#1f77b4" name="/uav0/mavros/local_position/pose/pose/orientation/roll"/>
         </plot>
        </DockArea>
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-1.121680" left="5.720049" right="61.428070" top="1.107205"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.707734" top="1.120682" bottom="-1.101671" left="5.599850"/>
          <limitY/>
          <curve color="#ff7f0e" name="/uav0/mavros/local_position/velocity_body/twist/angular/x"/>
          <curve color="#f14cc1" name="/uav0/mavros/local_position/velocity_local/twist/angular/x"/>
@@ -65,34 +65,34 @@
         </plot>
        </DockArea>
       </DockSplitter>
-      <DockSplitter orientation="-" sizes="0.500394;0.499606" count="2">
+      <DockSplitter count="2" orientation="-" sizes="0.5;0.5">
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-0.168177" left="5.720049" right="61.428070" top="0.189251"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.707734" top="0.185492" bottom="-0.163369" left="5.599850"/>
          <limitY/>
          <curve color="#d62728" name="/uav0/mavros/local_position/pose/pose/orientation/pitch"/>
         </plot>
        </DockArea>
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-1.072848" left="5.720049" right="61.428070" top="1.093764"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.707734" top="1.054556" bottom="-1.049160" left="5.599850"/>
          <limitY/>
          <curve color="#9467bd" name="/uav0/mavros/local_position/velocity_body/twist/angular/y"/>
          <curve color="#17becf" name="/uav0/mavros/local_position/velocity_local/twist/angular/y"/>
         </plot>
        </DockArea>
       </DockSplitter>
-      <DockSplitter orientation="-" sizes="0.500394;0.499606" count="2">
+      <DockSplitter count="2" orientation="-" sizes="0.5;0.5">
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-0.092162" left="5.720049" right="61.428070" top="0.251500"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.707734" top="0.263481" bottom="-0.094242" left="5.599850"/>
          <limitY/>
          <curve color="#1ac938" name="/uav0/mavros/local_position/pose/pose/orientation/yaw"/>
         </plot>
        </DockArea>
        <DockArea name="...">
-        <plot style="Lines" flip_y="false" flip_x="false" mode="TimeSeries">
-         <range bottom="-0.310389" left="5.720049" right="61.428070" top="0.402467"/>
+        <plot mode="TimeSeries" style="Lines" flip_y="false" flip_x="false">
+         <range right="60.707734" top="0.406807" bottom="-0.351412" left="5.599850"/>
          <limitY/>
          <curve color="#bcbd22" name="/uav0/mavros/local_position/velocity_body/twist/angular/z"/>
          <curve color="#1f77b4" name="/uav0/mavros/local_position/velocity_local/twist/angular/z"/>
@@ -103,14 +103,14 @@
     </DockSplitter>
    </Container>
   </Tab>
-  <currentTabIndex index="0"/>
+  <currentTabIndex index="1"/>
  </tabbed_widget>
  <use_relative_time_offset enabled="1"/>
  <!-- - - - - - - - - - - - - - - -->
  <!-- - - - - - - - - - - - - - - -->
  <Plugins>
   <plugin ID="DataLoad CSV">
-   <parameters time_axis="" delimiter="0"/>
+   <parameters delimiter="0" time_axis=""/>
   </plugin>
   <plugin ID="DataLoad MCAP"/>
   <plugin ID="DataLoad ROS bags">
@@ -145,7 +145,7 @@
  </Plugins>
  <!-- - - - - - - - - - - - - - - -->
  <previouslyLoaded_Datafiles>
-  <fileInfo prefix="" filename="uav_info.bag">
+  <fileInfo filename="uav_info.bag" prefix="">
    <plugin ID="DataLoad ROS bags">
     <use_header_stamp value="false"/>
     <discard_large_arrays value="true"/>

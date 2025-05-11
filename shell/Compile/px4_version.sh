@@ -1,4 +1,4 @@
-# 这个脚本是为了保证px4的版本是否和当前系统匹配
+# 这个脚本是为了保证px4的版本是否和当前系统匹配,正对仿真
 cd ~/PX4-Autopilot
 current_version=$(git rev-parse HEAD)
 match_version=dd9adc894963654fc1135adcef0a15742adb6203
@@ -9,5 +9,12 @@ if [ "$current_version" != "$match_version" ]; then
     echo "切换完成编译中"
     make px4_sitl gazebo
 else
-    echo "px4版本匹配,可直接运行编译代码"
+    echo "px4版本匹配"
+    # 检查build文件夹是否存在
+    if [ -d "build" ]; then
+        echo "build文件夹存在，已编译过，可直接运行"
+    else
+        echo "build文件夹不存在，需要重新编译"
+        make px4_sitl gazebo
+    fi
 fi
