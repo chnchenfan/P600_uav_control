@@ -22,9 +22,9 @@ Commander::~Commander()
 {
 }
 
-void Commander::move(double x, double y, double z, string frame)
+void Commander::move(double x, double y, double z)
 {
-    set_pose(x, y, z, frame);
+    set_pose(x, y, z);
     position_target_pub.publish(pose);
 }
 
@@ -72,19 +72,11 @@ void Commander::takeoff()
 }
 
 
-void Commander::set_pose(double x, double y, double z, string frame)
+void Commander::set_pose(double x, double y, double z)
 {
     // FLU是基于当前的飞行位置作为为初始位置
     pose.header.stamp = ros::Time::now();
-    if(frame == "FLU")
-    {
-        pose.header.frame_id = "base_link";//说明是在机身坐标系下
-    }
-    else
-    {
-        pose.header.frame_id = "map";//这里是世界定位，也就是飞机的起飞位置
-    }
-    
+    pose.header.frame_id = "map";//这里是世界定位，也就是飞机的起飞位置
     pose.pose.position.x = x;
     pose.pose.position.y = y;
     pose.pose.position.z = z;

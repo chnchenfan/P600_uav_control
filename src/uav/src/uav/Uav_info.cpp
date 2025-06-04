@@ -80,7 +80,7 @@ void Uav_info::Set_arm_offboard(){
     ROS_INFO("即将进入offboard");
     while(ros::ok() && current_mavros_state.mode != "OFFBOARD")
     {
-        cmd.move(0, 0,setpoint_pos.z,"ENU");
+        cmd.move(0, 0,setpoint_pos.z);
         cmd.offboard();
         ros::spinOnce();
     }

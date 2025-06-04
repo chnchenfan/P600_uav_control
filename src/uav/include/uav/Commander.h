@@ -28,12 +28,12 @@ public:
   void offboard();//将activity.data = "OFFBOARD"并发布，然后在Driver.cpp中设置
   void arm();
   void disarm();
-  void move(double x, double y, double z, string frame = "ENU");// 给位置信息，frame是坐标系，只有FLU和ENU，FLU是机体坐标系，ENU是世界坐标系
+  void move(double x, double y, double z);
   void turn(double yaw);//发布期望偏航角,发送的角度
   void hover();//悬停
   void land();//着陆
   void takeoff();
-  void set_pose(double x, double y, double z, string frame = "ENU");//设置坐标
+  void set_pose(double x, double y, double z);//设置坐标
 
 private:
   ros::Publisher position_target_pub;//发布位姿目标

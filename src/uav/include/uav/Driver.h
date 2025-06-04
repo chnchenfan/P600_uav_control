@@ -39,9 +39,7 @@ public:
   void takeoff();
   void set_target_pose(double x, double y, double z, double yaw);
   void start();
-  void Quaternion2yaw(double x, double y, double z, double w);//四元数转为偏航角
   bool arm_offb_detection();//offboard模式和起飞检测
-  std::vector<double> FLU2ENU(double x, double y, double z);
   
 private:
   
@@ -69,7 +67,7 @@ private:
   double cur_position_x;
   double cur_position_y;
   double cur_position_z;
-  double yaw_rad = 0;
+  double yaw_rad ;
   double cur_heading_rad;//当前偏航角
     //回调函数
   void local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg);
