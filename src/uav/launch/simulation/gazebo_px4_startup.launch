@@ -3,6 +3,9 @@
     <!-- 是否有组名标志，g0无组名，g1有组名 -->
     <arg name="ns_flag" default="g0" />
     <param name="ns_flag" value="$(arg ns_flag)" />
+    <!-- 修改sdf仿真模型 -->
+    <arg name="sdf_model_uav_" default="iris" />
+    <param name="sdf_model_uav_" value="$(arg sdf_model_uav_)" />
     <!-- MAVROS posix SITL environment launch script -->
     <!-- launches Gazebo environment and 2x: MAVROS, PX4 SITL, and spawns vehicle -->
     <!-- vehicle model and world -->
@@ -35,7 +38,7 @@
             <arg name="P" value="0"/>
             <arg name="Y" value="0"/>
             <arg name="vehicle" value="iris"/>
-            <arg name="sdf" value="iris"/>
+            <arg name="sdf" value="$(arg sdf_model_uav_)"/>
             <arg name="mavlink_udp_port" value="18570"/>
             <arg name="mavlink_tcp_port" value="4560"/>
             <arg name="ID" value="$(arg ID)"/>
@@ -64,7 +67,7 @@
                 <arg name="P" value="0"/>
                 <arg name="Y" value="0"/>
                 <arg name="vehicle" value="iris"/>
-                <arg name="sdf" value="iris"/>
+                <arg name="sdf" value="$(arg sdf_model_uav_)"/>
                 <arg name="mavlink_udp_port" value="18570"/>
                 <arg name="mavlink_tcp_port" value="4560"/>
                 <arg name="ID" value="$(arg ID)"/>

@@ -14,4 +14,9 @@
     <group if="$(eval arg('estimator_flag') == 'w2')">
         <include file="$(find px4_realsense_bridge)/launch/bridge.launch"/>     
     </group>
+    <!-- 动捕定位 -->
+    <group if="$(eval arg('estimator_flag') == 'w3')">
+        <include file="$(find vrpn_client_ros)/launch/vrpn.launch"/>
+        <node pkg="uav" type="pos_estimator0" name="pos_estimator0" output="screen"/>   
+    </group>
 </launch>

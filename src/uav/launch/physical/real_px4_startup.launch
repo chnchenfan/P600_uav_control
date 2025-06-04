@@ -4,7 +4,7 @@
     <arg name="ID_in_group" value="0"/>
     <arg name="gazebo_model_name" default="uav$(arg ID_in_group)"/>
     <!-- 注意波特率信息 -->
-    <arg name="fcu_url" default="/dev/ttyACM0:921600" />
+    <arg name="fcu_url" default="/dev/ttyUSB0:921600" />
     <arg name="gcs_url" default="" />
     <arg name="tgt_system" default="1" />
     <arg name="tgt_component" default="1" />

@@ -48,21 +48,17 @@ void Judge_param_load(ros::NodeHandle nh){
 //仿真测试
 void Gazebo_test(Uav_info &iris){
     ros::Rate r(30);
-    while(ros::ok()){ 
-        //解锁并进入offboard模式并飞到起点上方
-        ROS_INFO("即将解锁");
-        iris.Set_arm_offboard();
-        ROS_INFO("offboard 切换成功！！！！");
-        ROS_INFO("炸鸡正在去起点上方");
-        iris.IsArrived(iris.setpoint_pos.x,iris.setpoint_pos.y,iris.setpoint_pos.z);
-        //正方形飞行
-        iris.IsArrived(0,0,1);
-        iris.IsArrived(1,0,1);
-        iris.IsArrived(1,1,1);
-        iris.IsArrived(0,1,1);
-        iris.IsArrived(0,0,1);
-        iris.IsArrived(0,0,0.5);        
-        break;
+    //解锁并进入offboard模式并飞到起点上方
+    ROS_INFO("即将解锁");
+    iris.Set_arm_offboard();
+    ROS_INFO("offbo");
+    iris.IsArrived(iris.setpoint_pos.x,iris.setpoint_pos.y,iris.setpoint_pos.z);
+    ROS_INFO("fly");
+    while(!iris.land_flag){ 
+        if(iris.guidefly_flag){
+            iris.IsArrived(iris.setpoint_pos.x,iris.setpoint_pos.y,iris.setpoint_pos.z);
+            iris.guidefly_flag=false;
+        }
         r.sleep();
         ros::spinOnce();  
     } 

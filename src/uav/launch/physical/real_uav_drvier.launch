@@ -1,4 +1,0 @@
-<launch>
-    <node pkg="uav" type="Driver0" name="Driver0"   output="screen" />
-    <node pkg="uav" type="uav_real0" name="uav_real0"   output="screen" />
-</launch>

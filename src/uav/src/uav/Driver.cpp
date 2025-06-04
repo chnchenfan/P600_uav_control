@@ -139,8 +139,8 @@ void Driver::set_target_position_callback(const geometry_msgs::PoseStampedConstP
 //设置期望角度，只有接收到才有，否则为0
 void Driver::set_target_yaw_callback(const std_msgs::Float64ConstPtr& msg)
 {
-    yaw_rad = cur_heading_rad + msg->data*pi/180;
-    set_target_pose(cur_target_pose.position.x,cur_target_pose.position.y,TAKEOFF_HEIGHT,yaw_rad);
+    yaw_rad =  msg->data*pi/180;
+    set_target_pose(cur_target_pose.position.x,cur_target_pose.position.y,cur_target_pose.position.z,yaw_rad);
 }
 
 void Driver::custom_activity_callback(const std_msgs::StringConstPtr& msg)
@@ -228,7 +228,7 @@ bool Driver::arm_offb_detection()
 
 void Driver::start()
 {
-    ros::Rate loop_rate(20);
+    ros::Rate loop_rate(30);
     while(ros::ok())
     {
         local_target_pub.publish(cur_target_pose);//这里一直发布期望位置

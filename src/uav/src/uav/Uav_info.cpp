@@ -4,16 +4,15 @@ Uav_info::Uav_info(ros::NodeHandle& nh,std::string model_name):cmd(nh,model_name
     setpoint_pos.x=0;
     setpoint_pos.y=0;
     setpoint_pos.z=0.5;
-    RC_control = false;
     this->model_name=model_name;
     int flag;
+    guidefly_flag=false;
     nh.getParam("/group_flag", flag);
+    uav_guidefly_sub = nh.subscribe<uav::xyz_yaw_d>("/wjl/guidefly/pose_d",10,&Uav_info::Uav_guidefly_cb, this);
     if(flag==0){
-        rc_sub = nh.subscribe<mavros_msgs::RCIn>("/mavros/rc/in",10,&Uav_info::RC_callback, this);
         local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
         mavros_state_sub = nh.subscribe<mavros_msgs::State>("/mavros/state",10,&Uav_info::mr_state_callback, this);
     }else if(flag==1){
-        rc_sub = nh.subscribe<mavros_msgs::RCIn>("/"+model_name+"/mavros/rc/in",10,&Uav_info::RC_callback, this);
         local_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/"+model_name+"/mavros/local_position/pose",10,&Uav_info::mr_localpose_callback, this);
         mavros_state_sub = nh.subscribe<mavros_msgs::State>("/"+model_name+"/mavros/state",10,&Uav_info::mr_state_callback, this);
     }else{
@@ -111,17 +110,11 @@ void Uav_info::mr_state_callback(const mavros_msgs::State::ConstPtr& mavrosstate
 }
 
 
+void Uav_info::Uav_guidefly_cb(const boost::shared_ptr<const uav::xyz_yaw_d>& msg){
+    // std::cout<<"指点飞行:x"<<msg->x<<" y:"<<msg->y<<" z:"<<msg->z<<std::endl;
 
-void Uav_info::RC_callback(const mavros_msgs::RCIn::ConstPtr& RCmsg)
-{
-//   这里的RCmsg->channels.at(6) 中的6是对应的通道7（SWA），往下按生效
-    if(RCmsg->channels.at(6) >1500)
-    {
-        RC_control = true;
-    }
-    else
-    {
-        RC_control = false;
-    }
+    Set_pose(msg->x_d,msg->y_d,msg->z_d);
+    this->cmd.turn(msg->yaw_d);
+    land_flag=msg->land_flag;
+    guidefly_flag=true;
 }
-

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   message_generation
   std_msgs
+  dynamic_reconfigure
 )
 
 
@@ -41,11 +42,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  xyz_yaw_d.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -62,20 +62,20 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
 ################################################
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
-#   cfg/DynReconf2.cfg
-# )
+generate_dynamic_reconfigure_options(
+  cfg/uav_cmd.cfg
+  # cfg/DynReconf2.cfg
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -108,11 +108,12 @@ target_link_libraries(gazebo_pose0 ${catkin_LIBRARIES})
 # 飞行控制节点
 add_executable(Driver0 src/uav/z_Driver0.cpp src/uav/Driver.cpp src/other/Print_.cpp)
 target_link_libraries(Driver0 ${catkin_LIBRARIES})
-add_executable(uav_real0 src/uav_real0.cpp ${SRC_UAV})
-target_link_libraries(uav_real0 ${catkin_LIBRARIES})
-add_executable(uav_gazebo0 src/uav_gazebo0.cpp ${SRC_UAV})
-target_link_libraries(uav_gazebo0 ${catkin_LIBRARIES})
+add_executable(uav_guidefly_control src/uav_guidefly_control.cpp ${SRC_UAV})
+target_link_libraries(uav_guidefly_control ${catkin_LIBRARIES})
 
+# 动态参数节点
+add_executable(dynamic_guidefly src/dynamic_guidefly.cpp)
+target_link_libraries(dynamic_guidefly ${catkin_LIBRARIES})
 
 
 
