@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(vrpn_client_ros)
 
 find_package(catkin REQUIRED COMPONENTS geometry_msgs roscpp tf2_ros)
+set(CMAKE_HAVE_THREADS_LIBRARY TRUE)#绕过对线程库检测
 find_package(VRPN REQUIRED)
 
 catkin_package(
@@ -17,6 +18,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   SYSTEM ${VRPN_INCLUDE_DIR}
+  "/usr/include/eigen3"
 )
 
 add_library(vrpn_client_ros
@@ -42,6 +44,8 @@ target_link_libraries(vrpn_client_node
   vrpn_client_ros
   ${catkin_LIBRARIES}
 )
+add_executable(vrpn2mavros src/vrpn_to_mavros.cpp)
+target_link_libraries(vrpn2mavros  ${catkin_LIBRARIES})
 
 install(TARGETS vrpn_client_ros vrpn_tracker_node vrpn_client_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

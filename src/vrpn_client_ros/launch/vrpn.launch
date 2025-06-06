@@ -1,9 +1,0 @@
-<launch>
-	<!-- 修改来自动捕的IP -->
-    <arg name="server_name" value="192.168.0.100"/>	
-    <include file="$(find vrpn_client_ros)/launch/sample.launch">
-        <arg name="server" value="$(arg server_name)" />
-    </include>
-    
-
-</launch>

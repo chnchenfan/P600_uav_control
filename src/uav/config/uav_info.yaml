@@ -13,4 +13,4 @@ model_name0: uav0
 tof_usb: /dev/tof  # tof端口名
 baud_tof_rate: 115200   # tof波特率
 # 动捕定位
-mocap_object: Tracker1 # 动捕刚体名
+mocap_object: Tracker0 # 动捕刚体名

@@ -5,7 +5,7 @@ Pos_estimator::Pos_estimator(ros::NodeHandle& nh,std::string model_name){
     nh.getParam("/estimator_flag", estimator_flag);
     std::string mocap_object;
     nh.getParam("/mocap_object", mocap_object);
-    mocap_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/vrpn_client_node/"+ mocap_object + "/pose", 30,&Pos_estimator::mocap_cb, this);
+    // mocap_pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/vrpn_client_node/"+ mocap_object + "/pose", 30,&Pos_estimator::mocap_cb, this);
     if(flag==0){
         Print_green("未使用组名");
         vision_pose_pub = nh.advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 30);
@@ -29,10 +29,10 @@ void Pos_estimator::run(){
     while(ros::ok){
         if(estimator_flag=="w1"){
             vision_pose=gazebo_pose;
+            vision_pose_pub.publish(vision_pose);
         }else if (estimator_flag=="w3"){
-            vision_pose=mocap_pose;
+            // vision_pose=mocap_pose;
         }
-        vision_pose_pub.publish(vision_pose);
         r.sleep();
         ros::spinOnce();
     }

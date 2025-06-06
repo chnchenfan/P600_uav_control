@@ -1,0 +1,10 @@
+<launch>
+    <arg name="server_name" value="192.168.209.212"/>
+    	<include file="$(find vrpn_client_ros)/launch/sample.launch">
+        	<arg name="server" value="$(arg server_name)" />
+    	</include>
+    	<node pkg="vrpn_client_ros"  type="vrpn2mavros" name="vrpn2mavros" output="screen">
+        	<remap from="~vision_pose" to="mavros/vision_pose/pose" />
+        	<remap from="~odom" to="vrpn_client_node/Tracker0/pose" />   
+    	</node>
+</launch>

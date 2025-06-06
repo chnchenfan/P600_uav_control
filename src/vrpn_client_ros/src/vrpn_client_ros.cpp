@@ -275,7 +275,7 @@ namespace vrpn_client_ros
       tracker->twist_msg_.twist.angular.y = pitch;
       tracker->twist_msg_.twist.angular.z = yaw;
 
-      twist_pub->publish(tracker->twist_msg_);
+      // twist_pub->publish(tracker->twist_msg_);
     }
   }
 
@@ -330,7 +330,7 @@ namespace vrpn_client_ros
       tracker->accel_msg_.accel.angular.y = pitch;
       tracker->accel_msg_.accel.angular.z = yaw;
 
-      accel_pub->publish(tracker->accel_msg_);
+      // accel_pub->publish(tracker->accel_msg_);
     }
   }
 
