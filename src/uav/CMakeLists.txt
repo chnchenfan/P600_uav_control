@@ -48,11 +48,10 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  desired_start.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -110,6 +109,9 @@ add_executable(Driver0 src/uav/z_Driver0.cpp src/uav/Driver.cpp src/other/Print_
 target_link_libraries(Driver0 ${catkin_LIBRARIES})
 add_executable(uav_guidefly_control src/uav_guidefly_control.cpp ${SRC_UAV})
 target_link_libraries(uav_guidefly_control ${catkin_LIBRARIES})
+
+add_executable(desired_uav_fly src/desired_uav_fly.cpp ${SRC_UAV})
+target_link_libraries(desired_uav_fly ${catkin_LIBRARIES})
 
 # 动态参数节点
 add_executable(dynamic_guidefly src/dynamic_guidefly.cpp)

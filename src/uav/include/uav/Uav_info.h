@@ -15,6 +15,7 @@ public:
     Commander cmd;
     mavros_msgs::State current_mavros_state;
     geometry_msgs::Point setpoint_pos;//记录当前的期望值
+    double yaw_d;
     bool land_flag;//降落标志位
     bool guidefly_flag;//目标点标志位
     Uav_info(ros::NodeHandle& nh,std::string model_name);

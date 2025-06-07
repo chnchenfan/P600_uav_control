@@ -48,7 +48,7 @@ void Driver::set_target_pose(double x, double y, double z, double yaw)
 {
     cur_target_pose.header.stamp = ros::Time::now();
     cur_target_pose.coordinate_frame = 1;
-    cur_target_pose.type_mask = 1016;
+    cur_target_pose.type_mask = 3064;
     cur_target_pose.position.x = x;
     cur_target_pose.position.y = y;
     cur_target_pose.position.z = z;

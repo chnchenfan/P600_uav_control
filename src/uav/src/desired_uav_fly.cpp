@@ -1,6 +1,7 @@
 #include "uav/Uav_info.h"
+#include "uav/desired_start.h"
 void Judge_param_load(ros::NodeHandle nh);//通过这个函数判断yaml是否加载到参数服务器中
-void Gazebo_test(Uav_info &iris);
+void Trajectory_plan(Uav_info &iris,ros::NodeHandle &nh);
 
 int main(int argc, char *argv[])
 {   
@@ -12,8 +13,8 @@ int main(int argc, char *argv[])
     std::string model_name;
     nh.getParam("/model_name0", model_name);
     Uav_info iris0(nh,model_name);
-    iris0.setpoint_pos.z=0.5;
-    Gazebo_test(iris0);//仿真测试
+    iris0.setpoint_pos.z=0.35;
+    Trajectory_plan(iris0,nh);
     ROS_INFO("即将降落");
     iris0.cmd.land();
     ROS_INFO("降落成功！！！！");
@@ -46,7 +47,7 @@ void Judge_param_load(ros::NodeHandle nh){
 }
 
 
-void Gazebo_test(Uav_info &iris){
+void Trajectory_plan(Uav_info &iris,ros::NodeHandle &nh){
     ros::Rate r(30);
     //解锁并进入offboard模式并飞到起点上方
     ROS_INFO("即将解锁");
@@ -54,12 +55,22 @@ void Gazebo_test(Uav_info &iris){
     ROS_INFO("进入offboard模式");
     iris.IsArrived(iris.setpoint_pos.x,iris.setpoint_pos.y,iris.setpoint_pos.z);
     ROS_INFO("开始起飞");
-    while(!iris.land_flag){ 
-        // if(iris.guidefly_flag){
-        //     iris.IsArrived(iris.setpoint_pos.x,iris.setpoint_pos.y,iris.setpoint_pos.z);
-        //     iris.guidefly_flag=false;
-        // }
+    ros::ServiceClient client = nh.serviceClient<uav::desired_start>("/wjl/start/uav_desired");
+    ros::service::waitForService("/wjl/start/uav_desired");
+    uav::desired_start start_;
+    start_.request.desired_start=10;
+    bool flag = client.call(start_);
+    // 7.处理响应
+    if (flag){
+        ROS_INFO("请求正常处理,响应结果:%d",start_.response.desired_sent);
+    }else{
+        ROS_ERROR("请求处理失败....");
+        iris.land_flag=true;
+    }
+    while(!iris.land_flag && start_.response.desired_sent==3){ 
         r.sleep();
         ros::spinOnce();  
     } 
+    ros::Duration(3).sleep();
+    iris.IsArrived(iris.setpoint_pos.x,iris.setpoint_pos.y,0.5);
 }

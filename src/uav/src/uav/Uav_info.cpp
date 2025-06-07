@@ -7,6 +7,8 @@ Uav_info::Uav_info(ros::NodeHandle& nh,std::string model_name):cmd(nh,model_name
     this->model_name=model_name;
     int flag;
     guidefly_flag=false;
+    yaw_d=0;
+    land_flag=false;
     nh.getParam("/group_flag", flag);
     uav_guidefly_sub = nh.subscribe<uav::xyz_yaw_d>("/wjl/guidefly/pose_d",10,&Uav_info::Uav_guidefly_cb, this);
     if(flag==0){
@@ -32,10 +34,10 @@ bool Uav_info::isArrived()
     targetPos << setpoint_pos.x, setpoint_pos.y, setpoint_pos.z;
     biasPos = targetPos - currentPos;
     cout<<"距离目标点的距离为 ="<< biasPos.norm() <<endl;
-    if(biasPos.norm()<0.2)
+    if(biasPos.norm()<0.05)
     {
         ros::Duration(1).sleep();
-        if(biasPos.norm()<0.2)
+        if(biasPos.norm()<0.05)
         {
             return true;
         }
@@ -56,7 +58,7 @@ void Uav_info::IsArrived(double x,double y,double z){
         if(isArrived())
         {
             ROS_INFO("炸鸡已到达上方");
-            ros::Duration(3).sleep();
+            ros::Duration(1).sleep();
             break;
         }
         else
@@ -87,7 +89,7 @@ void Uav_info::Set_arm_offboard(){
     ROS_INFO("进入offboard成功");
 }
 void Uav_info::Set_pose(double x,double y,double z){
-    std::cout<<"设置期望的目标点为："<<x<<" "<<y<<" "<<z<<std::endl;
+    // std::cout<<"设置期望的目标点为："<<x<<" "<<y<<" "<<z<<std::endl;
     setpoint_pos.x=x;
     setpoint_pos.y=y;
     setpoint_pos.z=z;
@@ -111,10 +113,10 @@ void Uav_info::mr_state_callback(const mavros_msgs::State::ConstPtr& mavrosstate
 
 
 void Uav_info::Uav_guidefly_cb(const boost::shared_ptr<const uav::xyz_yaw_d>& msg){
-    // std::cout<<"指点飞行:x"<<msg->x<<" y:"<<msg->y<<" z:"<<msg->z<<std::endl;
-
+    // std::cout<<"指点飞行:x"<<msg->x_d<<" y:"<<msg->y_d<<" z:"<<msg->z_d<<std::endl;
     Set_pose(msg->x_d,msg->y_d,msg->z_d);
     this->cmd.turn(msg->yaw_d);
+    yaw_d=msg->yaw_d;
     land_flag=msg->land_flag;
     guidefly_flag=true;
 }

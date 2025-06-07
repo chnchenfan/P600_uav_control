@@ -30,8 +30,6 @@ void Pos_estimator::run(){
         if(estimator_flag=="w1"){
             vision_pose=gazebo_pose;
             vision_pose_pub.publish(vision_pose);
-        }else if (estimator_flag=="w3"){
-            // vision_pose=mocap_pose;
         }
         r.sleep();
         ros::spinOnce();

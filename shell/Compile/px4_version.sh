@@ -1,7 +1,7 @@
 # 这个脚本是为了保证px4的版本是否和当前系统匹配,正对仿真
 cd ~/PX4-Autopilot
 current_version=$(git rev-parse HEAD)
-match_version=dd9adc894963654fc1135adcef0a15742adb6203
+match_version=07a993234cc159f49b3bc3b34b1483480c7421c4
 if [ "$current_version" != "$match_version" ]; then
     echo "px4版本不匹配,正在切换到匹配版本"
     git checkout $match_version
