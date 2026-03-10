@@ -13,7 +13,9 @@ int main(int argc, char *argv[])
     std::string model_name;
     nh.getParam("/model_name0", model_name);
     Uav_info iris0(nh,model_name);
-    iris0.setpoint_pos.z=0.35;
+    double hover_z = 1.0;
+    nh.param("/wjl/uam/hover_z", hover_z, hover_z);
+    iris0.setpoint_pos.z = hover_z;
     Trajectory_plan(iris0,nh);
     ROS_INFO("即将降落");
     iris0.cmd.land();
