@@ -1,5 +1,5 @@
 <launch>
-    <arg name="server_name" value="192.168.209.212"/>
+    <arg name="server_name" value="192.168.18.12"/>
     	<include file="$(find vrpn_client_ros)/launch/sample.launch">
         	<arg name="server" value="$(arg server_name)" />
     	</include>
