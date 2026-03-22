@@ -115,7 +115,15 @@ void Driver::custom_activity_callback(const std_msgs::StringConstPtr& msg)
 void Driver::land()
 {
     set_mode.request.custom_mode = "AUTO.LAND";
-    set_mode_client.call(set_mode);
+    if (!set_mode_client.call(set_mode)) {
+        ROS_ERROR("LAND mode request failed: service call error");
+        return;
+    }
+    if (!set_mode.response.mode_sent) {
+        ROS_WARN("LAND mode request was sent but PX4 did not accept AUTO.LAND");
+        return;
+    }
+    ROS_INFO("AUTO.LAND request accepted");
 }
 
 void Driver::offboard()
@@ -171,7 +179,10 @@ void Driver::start()
     ros::Rate loop_rate(30);
     while(ros::ok())
     {
-        local_target_pub.publish(cur_target_pose);//这里一直发布期望位置
+        // 进入 AUTO.LAND 后停止继续刷 OFFBOARD 位置 setpoint，避免与 PX4 的降落模式冲突。
+        if(mavros_state.mode != "AUTO.LAND") {
+            local_target_pub.publish(cur_target_pose);//这里一直发布期望位置
+        }
         ros::spinOnce();
         loop_rate.sleep();
         if(mavros_state.mode == "AUTO.LAND" && cur_position_z < 0.1)

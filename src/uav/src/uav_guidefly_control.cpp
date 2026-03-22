@@ -14,9 +14,41 @@ int main(int argc, char *argv[])
     Uav_info iris0(nh,model_name);
     iris0.setpoint_pos.z=0.5;
     Gazebo_test(iris0);//仿真测试
-    ROS_INFO("即将降落");
-    iris0.cmd.land();
-    ROS_INFO("降落成功！！！！");
+
+    ROS_INFO("收到 land_flag，开始请求 AUTO.LAND");
+    ros::Rate landing_rate(10);
+    int land_request_count = 0;
+    while (ros::ok() && !iris0.IsAutoLandMode()) {
+        iris0.cmd.land();
+        ++land_request_count;
+        if (land_request_count % 10 == 0) {
+            ROS_WARN("等待进入 AUTO.LAND，当前模式=%s，已重发 LAND %d 次",
+                     iris0.current_mavros_state.mode.c_str(), land_request_count);
+        }
+        ros::spinOnce();
+        landing_rate.sleep();
+    }
+
+    if (!ros::ok()) {
+        return 0;
+    }
+
+    ROS_INFO("已进入 AUTO.LAND，等待无人机接地");
+    while (ros::ok() && !iris0.IsOnGround()) {
+        if (!iris0.IsAutoLandMode()) {
+            ROS_WARN_THROTTLE(1.0, "降落过程中退出 AUTO.LAND，重新请求 LAND");
+            iris0.cmd.land();
+        }
+        ros::spinOnce();
+        landing_rate.sleep();
+    }
+
+    if (ros::ok()) {
+        ROS_INFO("检测到已接地，发送 DISARM");
+        iris0.cmd.disarm();
+        ros::Duration(1.0).sleep();
+    }
+    ROS_INFO("降落流程结束");
     ros::spin();
 }
 

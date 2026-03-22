@@ -96,6 +96,14 @@ void Uav_info::Set_pose(double x,double y,double z){
     this->cmd.move(x,y,z);
 }
 
+bool Uav_info::IsAutoLandMode() const {
+    return current_mavros_state.mode == "AUTO.LAND";
+}
+
+bool Uav_info::IsOnGround(double altitude_threshold) const {
+    return cur_position_z < altitude_threshold;
+}
+
 void Uav_info::mr_localpose_callback(const geometry_msgs::PoseStampedConstPtr& localposemsg)
 {
   //ENU坐标系
