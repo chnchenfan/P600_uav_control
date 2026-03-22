@@ -225,10 +225,20 @@ GitHub: <https://github.com/chnchenfan/P600_uav_control>
 
 - `src/vrpn_client_ros/launch/vrpn_wjl.launch`
 
-当前默认链路:
+当前链路已支持按实验切换动捕刚体：
 
-- `vrpn_client_node` 输出 `/vrpn_client_node/Tracker0/pose`
-- `vrpn2mavros` 将动捕位置桥接到 `/mavros/vision_pose/pose`
+- 实验 1 / 3: `Tracker0`
+- 实验 2: `arm_base`
+- 实验 4: `arm_target`
+
+统一入口脚本：
+
+- `shell/Experiment/pos_mocap.sh exp1`
+- `shell/Experiment/pos_mocap.sh exp2`
+- `shell/Experiment/pos_mocap.sh exp3`
+- `shell/Experiment/pos_mocap.sh exp4`
+
+`vrpn2mavros` 会将对应刚体的 `/vrpn_client_node/<object>/pose` 桥接到 `/mavros/vision_pose/pose`。
 
 在实验四中，还需要额外提供:
 
@@ -294,6 +304,7 @@ GitHub: <https://github.com/chnchenfan/P600_uav_control>
 动捕桥接:
 
 - `src/vrpn_client_ros/launch/vrpn_wjl.launch`
+- `shell/Experiment/pos_mocap.sh`
 
 动态调参/手工指点:
 
