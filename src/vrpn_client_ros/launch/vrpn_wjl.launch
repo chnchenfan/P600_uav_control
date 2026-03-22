@@ -1,10 +1,17 @@
 <launch>
     <arg name="server_name" value="192.168.18.12"/>
-    	<include file="$(find vrpn_client_ros)/launch/sample.launch">
-        	<arg name="server" value="$(arg server_name)" />
-    	</include>
-    	<node pkg="vrpn_client_ros"  type="vrpn2mavros" name="vrpn2mavros" output="screen">
-        	<remap from="~vision_pose" to="mavros/vision_pose/pose" />
-        	<remap from="~odom" to="vrpn_client_node/Tracker0/pose" />   
-    	</node>
+    <arg name="mocap_object" default="Tracker0"/>
+
+    <include file="$(find vrpn_client_ros)/launch/sample.launch">
+        <arg name="server" value="$(arg server_name)" />
+    </include>
+
+    <!--
+        将指定刚体的 Pose 转给 mavros/vision_pose/pose。
+        默认仍使用 Tracker0；实验二/四可通过 mocap_object 切换到 arm_base/arm_target。
+    -->
+    <node pkg="vrpn_client_ros" type="vrpn2mavros" name="vrpn2mavros" output="screen">
+        <remap from="~vision_pose" to="mavros/vision_pose/pose" />
+        <remap from="~odom" to="vrpn_client_node/$(arg mocap_object)/pose" />
+    </node>
 </launch>
