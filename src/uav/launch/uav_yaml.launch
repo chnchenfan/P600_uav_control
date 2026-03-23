@@ -2,9 +2,10 @@
 <launch>
     <rosparam file="$(find uav)/config/uav_info.yaml" command="load" />
     <!-- 下面是estimator_flag是给飞控提供外部定位消息源 -->
-    <!-- w0：gps定位，w1：gazebo仿真世界真实位置信息，w2：t265+tof定位，w3：动捕定位 -->
+    <!-- w0：雷达定位，w1：gazebo仿真世界真实位置信息，w2：t265+tof定位，w3：动捕定位 -->
     <arg name="estimator_flag" default="w0"/>
     <arg name="mocap_object" default="Tracker0"/>
+    <arg name="server_name" default="192.168.18.12"/>
     <param name="estimator_flag" value="$(arg estimator_flag)" />
 
     <!-- gazebo真值定位 -->
@@ -20,7 +21,10 @@
 
     <!-- 动捕定位 -->
     <group if="$(eval arg('estimator_flag') == 'w3')">
+        <param name="mocap_object" value="$(arg mocap_object)" />
+        <param name="server_name" value="$(arg server_name)" />
         <include file="$(find vrpn_client_ros)/launch/vrpn_wjl.launch">
+            <arg name="server_name" value="$(arg server_name)" />
             <arg name="mocap_object" value="$(arg mocap_object)" />
         </include>
         <!-- <node pkg="uav" type="pos_estimator0" name="pos_estimator0" output="screen"/> -->

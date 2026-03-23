@@ -1,5 +1,5 @@
 <launch>
-    <arg name="server_name" value="192.168.18.12"/>
+    <arg name="server_name" default="192.168.18.12"/>
     <arg name="mocap_object" default="Tracker0"/>
 
     <include file="$(find vrpn_client_ros)/launch/sample.launch">
@@ -8,7 +8,8 @@
 
     <!--
         将指定刚体的 Pose 转给 mavros/vision_pose/pose。
-        默认仍使用 Tracker0；实验二/四可通过 mocap_object 切换到 arm_base/arm_target。
+        server_name 支持上层脚本动态传入，避免不同 Wi-Fi 环境下反复改 launch。
+        mocap_object 默认仍使用 Tracker0；实验二/四可通过参数切换到 arm_base/arm_target。
     -->
     <node pkg="vrpn_client_ros" type="vrpn2mavros" name="vrpn2mavros" output="screen">
         <remap from="~vision_pose" to="mavros/vision_pose/pose" />
