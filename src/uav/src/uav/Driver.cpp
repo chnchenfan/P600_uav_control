@@ -11,6 +11,7 @@ Driver::Driver(ros::NodeHandle& nh,std::string model_name)
     cur_position_z = 0.0;
     cur_heading_rad = 0.0;
     landing_requested = false;
+    local_pose_received = false;
 
     if(flag==0){
         set_target_position_sub = nh.subscribe("/wjl/set_pose/position",1,&Driver::set_target_position_callback,this);//位置信息设置订阅
@@ -58,7 +59,9 @@ void Driver::set_target_pose(double x, double y, double z, double yaw)
 {
     cur_target_pose.header.stamp = ros::Time::now();
     cur_target_pose.coordinate_frame = 1;
-    cur_target_pose.type_mask = 3064;
+    // 2040 ignores velocity, acceleration/force, and yaw-rate, but keeps position and yaw active.
+    // Before the first local pose arrives, keep yaw ignored to avoid commanding yaw=0 at startup.
+    cur_target_pose.type_mask = local_pose_received ? 2040 : 3064;
     cur_target_pose.position.x = x;
     cur_target_pose.position.y = y;
     cur_target_pose.position.z = z;
@@ -73,6 +76,12 @@ void Driver::local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg)
     cur_position_y = msg->pose.position.y;
     cur_position_z = msg->pose.position.z;
     cur_heading_rad = tf::getYaw(msg->pose.orientation);
+
+    if (!local_pose_received) {
+        local_pose_received = true;
+        yaw_rad = cur_heading_rad;
+        set_target_pose(cur_target_pose.position.x, cur_target_pose.position.y, cur_target_pose.position.z, yaw_rad);
+    }
 }
 
 
