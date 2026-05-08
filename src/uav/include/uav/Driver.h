@@ -41,6 +41,7 @@ public:
   void set_target_pose(double x, double y, double z, double yaw);
   void start();
   bool arm_offb_detection();//offboard模式和起飞检测
+  void set_target_pose_current_xy(double z);
   
 private:
   
@@ -72,6 +73,10 @@ private:
   double cur_heading_rad;//当前偏航角
   bool landing_requested{false};
   bool local_pose_received{false};
+  bool yaw_locked{false};
+  double locked_yaw_rad;
+  double takeoff_x;
+  double takeoff_y;
     //回调函数
   void local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg);
   void mavros_state_callback(const mavros_msgs::StateConstPtr& msg);

@@ -12,6 +12,10 @@ Driver::Driver(ros::NodeHandle& nh,std::string model_name)
     cur_heading_rad = 0.0;
     landing_requested = false;
     local_pose_received = false;
+    yaw_locked = false;
+    locked_yaw_rad = 0.0;
+    takeoff_x = 0.0;
+    takeoff_y = 0.0;
 
     if(flag==0){
         set_target_position_sub = nh.subscribe("/wjl/set_pose/position",1,&Driver::set_target_position_callback,this);//位置信息设置订阅
@@ -68,6 +72,22 @@ void Driver::set_target_pose(double x, double y, double z, double yaw)
     cur_target_pose.yaw = yaw;
 }
 
+void Driver::set_target_pose_current_xy(double z)
+{
+    if (!local_pose_received) {
+        set_target_pose(0.0, 0.0, z, yaw_rad);
+        return;
+    }
+
+    if (!yaw_locked) {
+        locked_yaw_rad = cur_heading_rad;
+        yaw_rad = locked_yaw_rad;
+        yaw_locked = true;
+    }
+
+    set_target_pose(cur_position_x, cur_position_y, z, locked_yaw_rad);
+}
+
 void Driver::local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg)
 {
     //ENU坐标系
@@ -79,8 +99,12 @@ void Driver::local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg)
 
     if (!local_pose_received) {
         local_pose_received = true;
-        yaw_rad = cur_heading_rad;
-        set_target_pose(cur_target_pose.position.x, cur_target_pose.position.y, cur_target_pose.position.z, yaw_rad);
+        locked_yaw_rad = cur_heading_rad;
+        yaw_rad = locked_yaw_rad;
+        yaw_locked = true;
+        takeoff_x = cur_position_x;
+        takeoff_y = cur_position_y;
+        set_target_pose(cur_position_x, cur_position_y, cur_target_pose.position.z, locked_yaw_rad);
     }
 }
 
@@ -98,8 +122,8 @@ void Driver::set_target_position_callback(const geometry_msgs::PoseStampedConstP
         return;
     }
 
-    //基于世界坐标系直接发送位置信息
-    set_target_pose(msg->pose.position.x, msg->pose.position.y ,msg->pose.position.z, yaw_rad);
+    // 基于世界坐标系直接发送位置信息；默认锁定起飞时 yaw，不跟随外部 yaw_d。
+    set_target_pose(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z, locked_yaw_rad);
 }
 //设置期望角度，只有接收到才有，否则为0
 void Driver::set_target_yaw_callback(const std_msgs::Float64ConstPtr& msg)
@@ -108,8 +132,14 @@ void Driver::set_target_yaw_callback(const std_msgs::Float64ConstPtr& msg)
         return;
     }
 
-    yaw_rad =  msg->data*pi/180;
-    set_target_pose(cur_target_pose.position.x,cur_target_pose.position.y,cur_target_pose.position.z,yaw_rad);
+    // 当前实机任务要求 yaw 不动。保留订阅但忽略外部 yaw 命令，避免实验节点或降落流程改变 yaw。
+    (void)msg;
+    if (!yaw_locked && local_pose_received) {
+        locked_yaw_rad = cur_heading_rad;
+        yaw_locked = true;
+    }
+    yaw_rad = locked_yaw_rad;
+    set_target_pose(cur_target_pose.position.x, cur_target_pose.position.y, cur_target_pose.position.z, locked_yaw_rad);
 }
 
 void Driver::custom_activity_callback(const std_msgs::StringConstPtr& msg)
@@ -144,34 +174,56 @@ void Driver::land()
 {
     landing_requested = true;
 
-    // Before switching out of OFFBOARD, hold the current position and current yaw
-    // briefly. This avoids carrying a stale yaw/yawspeed setpoint into AUTO.LAND.
-    ros::Rate hold_rate(30);
-    const ros::Time hold_until = ros::Time::now() + ros::Duration(1.0);
+    if (local_pose_received) {
+        if (!yaw_locked) {
+            locked_yaw_rad = cur_heading_rad;
+            yaw_locked = true;
+        }
 
-    while (ros::ok() && ros::Time::now() < hold_until) {
-        set_target_pose(cur_position_x, cur_position_y, cur_position_z, cur_heading_rad);
-        local_target_pub.publish(cur_target_pose);
-        ros::spinOnce();
-        hold_rate.sleep();
+        const double land_x = cur_position_x;
+        const double land_y = cur_position_y;
+        const double land_yaw = locked_yaw_rad;
+        const double start_z = cur_position_z;
+        const double final_z = 0.15;
+        const double descend_rate = 0.20;
+        const double dz = start_z - final_z;
+        const double duration = std::max(2.0, std::fabs(dz) / descend_rate);
+        ros::Rate land_rate(30);
+        const ros::Time start_time = ros::Time::now();
+
+        ROS_INFO("OFFBOARD yaw-hold landing: x=%.2f y=%.2f z=%.2f yaw=%.1fdeg",
+                 land_x, land_y, start_z, land_yaw * 180.0 / M_PI);
+
+        while (ros::ok()) {
+            const double elapsed = (ros::Time::now() - start_time).toSec();
+            const double ratio = std::min(1.0, elapsed / duration);
+            const double z_sp = start_z + (final_z - start_z) * ratio;
+
+            set_target_pose(land_x, land_y, z_sp, land_yaw);
+            local_target_pub.publish(cur_target_pose);
+            ros::spinOnce();
+
+            if (ratio >= 1.0 || cur_position_z < 0.20) {
+                break;
+            }
+
+            land_rate.sleep();
+        }
     }
 
-    set_mode.request.custom_mode = "AUTO.LAND";
-    if (!set_mode_client.call(set_mode)) {
-        ROS_ERROR("LAND mode request failed: service call error");
-        return;
-    }
-    if (!set_mode.response.mode_sent) {
-        ROS_WARN("LAND mode request was sent but PX4 did not accept AUTO.LAND");
-        return;
-    }
-    ROS_INFO("AUTO.LAND request accepted");
+    disarm();
+    ROS_INFO("OFFBOARD yaw-hold landing finished, disarm requested");
 }
 
 void Driver::offboard()
 {
     // cout<<"offboardingng!!!"<<endl;
     landing_requested = false;
+    if (local_pose_received && !yaw_locked) {
+        locked_yaw_rad = cur_heading_rad;
+        yaw_rad = locked_yaw_rad;
+        yaw_locked = true;
+    }
     set_mode.request.custom_mode = "OFFBOARD";
     set_mode_client.call(set_mode);  
 }
@@ -203,7 +255,16 @@ void Driver::takeoff()
     if(!arm_offb_detection())
     {
         landing_requested = false;
-        set_target_pose(0,0,TAKEOFF_HEIGHT,0);
+        if (local_pose_received) {
+            takeoff_x = cur_position_x;
+            takeoff_y = cur_position_y;
+            locked_yaw_rad = cur_heading_rad;
+            yaw_rad = locked_yaw_rad;
+            yaw_locked = true;
+            set_target_pose(takeoff_x, takeoff_y, TAKEOFF_HEIGHT, locked_yaw_rad);
+        } else {
+            set_target_pose(0, 0, TAKEOFF_HEIGHT, yaw_rad);
+        }
         offboard();
         arm();
         cout<<"起飞！"<<endl;
@@ -223,13 +284,8 @@ void Driver::start()
     ros::Rate loop_rate(30);
     while(ros::ok())
     {
-        // 进入 AUTO.LAND 后停止继续刷 OFFBOARD 位置 setpoint，避免与 PX4 的降落模式冲突。
-        if(mavros_state.mode != "AUTO.LAND") {
-            local_target_pub.publish(cur_target_pose);//这里一直发布期望位置
-        }
+        local_target_pub.publish(cur_target_pose);//这里一直发布期望位置
         ros::spinOnce();
         loop_rate.sleep();
-        if(mavros_state.mode == "AUTO.LAND" && cur_position_z < 0.1)
-        disarm();
     }
 }
