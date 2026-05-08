@@ -72,21 +72,23 @@ void Uav_info::IsArrived(double x,double y,double z){
 }
 void Uav_info::Set_arm_offboard(){
     ros::Rate loop_rate(30);
-    while(ros::ok() && !current_mavros_state.armed)
-    {
-        cmd.arm();
-        loop_rate.sleep();     
-        ros::spinOnce();
-    }
-    ROS_INFO("解锁成功");
     ROS_INFO("即将进入offboard");
     while(ros::ok() && current_mavros_state.mode != "OFFBOARD")
     {
         cmd.move(0, 0,setpoint_pos.z);
         cmd.offboard();
+        loop_rate.sleep();
         ros::spinOnce();
     }
     ROS_INFO("进入offboard成功");
+    while(ros::ok() && !current_mavros_state.armed)
+    {
+        cmd.move(0, 0,setpoint_pos.z);
+        cmd.arm();
+        loop_rate.sleep();
+        ros::spinOnce();
+    }
+    ROS_INFO("解锁成功");
 }
 void Uav_info::Set_pose(double x,double y,double z){
     // std::cout<<"设置期望的目标点为："<<x<<" "<<y<<" "<<z<<std::endl;

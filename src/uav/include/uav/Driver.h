@@ -10,6 +10,7 @@
 #include <Eigen/Geometry>
 #include <Eigen/Eigen>
 #include <Eigen/StdVector>
+#include <tf/tf.h>
 
 #include <math.h>
 // mavros
@@ -69,6 +70,7 @@ private:
   double cur_position_z;
   double yaw_rad ;
   double cur_heading_rad;//当前偏航角
+  bool landing_requested{false};
     //回调函数
   void local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg);
   void mavros_state_callback(const mavros_msgs::StateConstPtr& msg);

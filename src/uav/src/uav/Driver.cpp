@@ -6,6 +6,12 @@ Driver::Driver(ros::NodeHandle& nh,std::string model_name)
     int flag;
     nh.getParam("/group_flag", flag);
     yaw_rad=0;
+    cur_position_x = 0.0;
+    cur_position_y = 0.0;
+    cur_position_z = 0.0;
+    cur_heading_rad = 0.0;
+    landing_requested = false;
+
     if(flag==0){
         set_target_position_sub = nh.subscribe("/wjl/set_pose/position",1,&Driver::set_target_position_callback,this);//位置信息设置订阅
         set_target_yaw_sub = nh.subscribe("/wjl/set_pose/orientation",1,&Driver::set_target_yaw_callback,this);//偏航角订阅
@@ -34,6 +40,10 @@ Driver::Driver(ros::NodeHandle& nh,std::string model_name)
         ROS_ERROR("参数加载失败，请检查重新启动！！！");
         exit(0);
     }
+
+    // Publish a valid neutral setpoint from startup. Without this initialization
+    // MAVROS forwards coordinate_frame=0, which PX4 rejects for SET_POSITION_TARGET_LOCAL_NED.
+    set_target_pose(0.0, 0.0, TAKEOFF_HEIGHT, 0.0);
 }
 
 Driver::~Driver()
@@ -62,6 +72,7 @@ void Driver::local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg)
     cur_position_x = msg->pose.position.x;
     cur_position_y = msg->pose.position.y;
     cur_position_z = msg->pose.position.z;
+    cur_heading_rad = tf::getYaw(msg->pose.orientation);
 }
 
 
@@ -74,12 +85,20 @@ void Driver::mavros_state_callback(const mavros_msgs::StateConstPtr& msg)
 
 void Driver::set_target_position_callback(const geometry_msgs::PoseStampedConstPtr& msg)
 {
+    if (landing_requested) {
+        return;
+    }
+
     //基于世界坐标系直接发送位置信息
     set_target_pose(msg->pose.position.x, msg->pose.position.y ,msg->pose.position.z, yaw_rad);
 }
 //设置期望角度，只有接收到才有，否则为0
 void Driver::set_target_yaw_callback(const std_msgs::Float64ConstPtr& msg)
 {
+    if (landing_requested) {
+        return;
+    }
+
     yaw_rad =  msg->data*pi/180;
     set_target_pose(cur_target_pose.position.x,cur_target_pose.position.y,cur_target_pose.position.z,yaw_rad);
 }
@@ -114,6 +133,20 @@ void Driver::custom_activity_callback(const std_msgs::StringConstPtr& msg)
 
 void Driver::land()
 {
+    landing_requested = true;
+
+    // Before switching out of OFFBOARD, hold the current position and current yaw
+    // briefly. This avoids carrying a stale yaw/yawspeed setpoint into AUTO.LAND.
+    ros::Rate hold_rate(30);
+    const ros::Time hold_until = ros::Time::now() + ros::Duration(1.0);
+
+    while (ros::ok() && ros::Time::now() < hold_until) {
+        set_target_pose(cur_position_x, cur_position_y, cur_position_z, cur_heading_rad);
+        local_target_pub.publish(cur_target_pose);
+        ros::spinOnce();
+        hold_rate.sleep();
+    }
+
     set_mode.request.custom_mode = "AUTO.LAND";
     if (!set_mode_client.call(set_mode)) {
         ROS_ERROR("LAND mode request failed: service call error");
@@ -129,6 +162,7 @@ void Driver::land()
 void Driver::offboard()
 {
     // cout<<"offboardingng!!!"<<endl;
+    landing_requested = false;
     set_mode.request.custom_mode = "OFFBOARD";
     set_mode_client.call(set_mode);  
 }
@@ -159,6 +193,7 @@ void Driver::takeoff()
 {
     if(!arm_offb_detection())
     {
+        landing_requested = false;
         set_target_pose(0,0,TAKEOFF_HEIGHT,0);
         offboard();
         arm();
@@ -189,4 +224,3 @@ void Driver::start()
         disarm();
     }
 }
-
