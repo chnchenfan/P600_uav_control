@@ -34,6 +34,8 @@ Driver::Driver(ros::NodeHandle& nh,std::string model_name)
         ROS_ERROR("参数加载失败，请检查重新启动！！！");
         exit(0);
     }
+
+    set_target_pose(0.0, 0.0, TAKEOFF_HEIGHT, 0.0);
 }
 
 Driver::~Driver()
@@ -53,6 +55,11 @@ void Driver::set_target_pose(double x, double y, double z, double yaw)
     cur_target_pose.position.y = y;
     cur_target_pose.position.z = z;
     cur_target_pose.yaw = yaw;
+}
+
+bool Driver::target_frame_valid() const
+{
+    return cur_target_pose.coordinate_frame == mavros_msgs::PositionTarget::FRAME_LOCAL_NED;
 }
 
 void Driver::local_pose_callback(const geometry_msgs::PoseStampedConstPtr& msg)
@@ -160,6 +167,13 @@ void Driver::takeoff()
     if(!arm_offb_detection())
     {
         set_target_pose(0,0,TAKEOFF_HEIGHT,0);
+
+        if(!target_frame_valid()) {
+            ROS_ERROR("TAKEOFF blocked: invalid setpoint coordinate_frame=%u, expected FRAME_LOCAL_NED(1)",
+                      static_cast<unsigned>(cur_target_pose.coordinate_frame));
+            return;
+        }
+
         offboard();
         arm();
         cout<<"起飞！"<<endl;
@@ -181,6 +195,11 @@ void Driver::start()
     {
         // 进入 AUTO.LAND 后停止继续刷 OFFBOARD 位置 setpoint，避免与 PX4 的降落模式冲突。
         if(mavros_state.mode != "AUTO.LAND") {
+            if(!target_frame_valid()) {
+                ROS_ERROR_THROTTLE(1.0,
+                    "Invalid setpoint coordinate_frame=%u, expected FRAME_LOCAL_NED(1)",
+                    static_cast<unsigned>(cur_target_pose.coordinate_frame));
+            }
             local_target_pub.publish(cur_target_pose);//这里一直发布期望位置
         }
         ros::spinOnce();

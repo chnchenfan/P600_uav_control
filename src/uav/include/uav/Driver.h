@@ -75,4 +75,5 @@ private:
   void set_target_position_callback(const geometry_msgs::PoseStampedConstPtr& msg);
   void set_target_yaw_callback(const std_msgs::Float64ConstPtr& msg);
   void custom_activity_callback(const std_msgs::StringConstPtr& msg);
+  bool target_frame_valid() const;
 };
